@@ -48,6 +48,7 @@ let marks = [];
 let lastClock = '';
 const clockEl = document.querySelector('.clock');
 const hdr = document.querySelector('[data-hdr]');
+const heroEl = document.querySelector('.hero, .phero');
 
 function measure() {
   const secs = [...document.querySelectorAll('[data-time]')];
@@ -92,6 +93,7 @@ function updateSky() {
     clockEl.classList.toggle('is-dark', h > 20.2);
   }
   const dark = h > 20.2;
+  if (clockEl) clockEl.classList.toggle('is-away', !!heroEl && window.scrollY < window.innerHeight * 0.55);
   root.style.setProperty('--cursor', dark ? '#F4F1EA' : '#13233A');
   if (hdr) hdr.classList.toggle('is-dark', dark);
 }
@@ -363,8 +365,19 @@ export function initRotator() {
     el.setAttribute('aria-label', words().join(', '));
     if (animate && !calm) gsap.from(el.querySelectorAll('.ch'), { yPercent: 90, opacity: 0, duration: 0.7, ease: 'back.out(2)', stagger: 0.03 });
   };
+  // Réserve la hauteur de la plus longue formule pour que la page ne saute pas
+  const reserve = () => {
+    el.style.minHeight = '';
+    const cur = el.innerHTML;
+    let max = 0;
+    words().forEach((w) => { show(w, false); max = Math.max(max, el.getBoundingClientRect().height); });
+    el.innerHTML = cur;
+    el.style.minHeight = `${Math.ceil(max)}px`;
+  };
   show(words()[0], false);
-  onLang(() => { i = 0; show(words()[0], false); });
+  reserve();
+  window.addEventListener('resize', reserve);
+  onLang(() => { i = 0; show(words()[0], false); reserve(); });
   if (calm) return;
   setInterval(() => {
     const chars = el.querySelectorAll('.ch');
@@ -464,7 +477,7 @@ export function initTrack() {
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
     const dist = () => track.scrollWidth - window.innerWidth;
-    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, scrub: 0.6, invalidateOnRefresh: true } });
+    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, pinType: 'transform', anticipatePin: 1, scrub: 0.6, invalidateOnRefresh: true } });
     const skew = gsap.quickTo(imgs, 'skewX', { duration: 0.5, ease: 'power3' });
     const tick = () => { if (lenis) skew(clamp(lenis.velocity * 0.25, -8, 8)); };
     gsap.ticker.add(tick);

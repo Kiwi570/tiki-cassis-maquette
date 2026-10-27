@@ -19,7 +19,7 @@ const EN = {
   'home.hero.title': 'Sail into the heart <em>of the Calanques</em> National Park',
   'home.hero.lead': 'On board a traditional wooden boat. Open all year round, departing from the Port of Cassis.',
   'home.hero.cta1': 'Build my trip', 'home.hero.cta2': 'Contact the skipper',
-  'home.hero.ai': 'Illustrative AI-generated video', 'home.hero.meta1': 'Quai Saint-Pierre · boat no. 5', 'home.hero.meta2': '12 passengers maximum', 'home.hero.scroll': 'Cast off',
+  'home.hero.ai': 'Illustrative AI-generated video', 'home.hero.meta1': 'Quai Saint-Pierre · boat no. 5', 'home.hero.meta2': '12 passengers maximum', 'home.hero.price': 'Private charter from €300', 'home.hero.scroll': 'Cast off',
   'home.dicton.eyebrow': 'The famous Provençal saying',
   'home.dicton.tr': 'Whoever has seen Paris but not <span class="mark">Cassis<svg class="mark__ring" viewBox="0 0 220 90" preserveAspectRatio="none" aria-hidden="true"><path data-draw d="M18 52 C 14 22, 80 8, 128 10 C 186 12, 214 32, 206 54 C 198 78, 132 86, 82 82 C 40 79, 8 66, 22 40 C 30 26, 60 18, 96 16"/></svg></span> has seen nothing.',
   'home.dicton.attr': 'A Provençal saying, commonly attributed to Frédéric Mistral.',

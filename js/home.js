@@ -56,12 +56,15 @@ if (calm) {
 /* ---------- Vidéo d'ouverture (illustration générée par IA, signalée à l'écran) ---------- */
 const heroVideo = hero.querySelector('[data-hero-video]');
 const aiNote = hero.querySelector('[data-ai-note]');
-if (heroVideo && !calm && window.innerWidth / window.innerHeight >= 0.8) {
+const conn = navigator.connection || {};
+const lightData = conn.saveData || /(^|-)2g/.test(conn.effectiveType || '');
+if (heroVideo && !calm && !lightData && window.innerWidth / window.innerHeight >= 0.8) {
   heroVideo.querySelectorAll('source').forEach((s) => { s.src = s.dataset.src; });
   heroVideo.preload = 'auto';
   heroVideo.load();
   heroVideo.addEventListener('playing', () => {
     gsap.to(heroVideo, { opacity: 1, duration: 1.4, ease: 'power2.out' });
+    hero.classList.add('has-video');
     if (aiNote) { aiNote.hidden = false; gsap.from(aiNote, { opacity: 0, y: -8, duration: 0.8, ease: 'power2.out' }); }
   }, { once: true });
   const play = () => heroVideo.play().catch(() => {});
@@ -124,7 +127,7 @@ if (calm) {
   mm.add('(min-width: 901px)', () => {
     steps.forEach((s, i) => gsap.set(s, { autoAlpha: i === active ? 1 : 0, y: 0 }));
     const st = ScrollTrigger.create({
-      trigger: '.parcours', start: 'top top', end: '+=360%', pin: true, scrub: true,
+      trigger: '.parcours', start: 'top top', end: '+=300%', pin: true, pinType: 'transform', anticipatePin: 1, scrub: true,
       onUpdate: (s) => setProgress(Math.min(4.99, s.progress * 5.2))
     });
     return () => { st.kill(); steps.forEach((s) => gsap.set(s, { clearProps: 'all' })); };

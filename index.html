@@ -16,6 +16,7 @@
 <link rel="preload" href="fonts/instrument-serif-regular.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="fonts/manrope-variable.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"TIKI Cassis","description":"Bateau traditionnel en bois construit en 1958 : sorties en mer et visite des calanques au départ du Port de Cassis, toute l'année.","telephone":"+33668263345","email":"calanques@tikicassis.fr","image":"img/og-tiki-cassis.jpg","address":{"@type":"PostalAddress","streetAddress":"Quai Saint-Pierre, Port de Cassis","postalCode":"13260","addressLocality":"Cassis","addressCountry":"FR"},"sameAs":["https://www.instagram.com/tiki_cassis/"]}</script>
 <script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-calm')==='1')d.classList.add('calm');if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}})();</script>
 </head>
 <body>
@@ -91,6 +92,7 @@
     </picture>
     <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true" data-hero-video><source data-src="video/hero-calanques.webm" type="video/webm"><source data-src="video/hero-calanques.mp4" type="video/mp4"></video>
     </div>
+    <div class="hero__grain" aria-hidden="true"></div>
     <div class="hero__glint" aria-hidden="true"></div>
     <p class="ai-note" data-ai-note hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7 4.3 13.1l1.1-4.3L2 6l4.4-.3z" fill="currentColor"/></svg><span data-i18n="home.hero.ai">Vidéo d'illustration générée par IA</span></p>
     <div class="hero__shade"></div>
@@ -107,12 +109,13 @@
   <div class="wrap hero__meta" data-hero-fade>
     <span data-i18n="home.hero.meta1">Quai Saint-Pierre · bateau n°5</span>
     <span data-i18n="home.hero.meta2">12 passagers maximum</span>
-    <span class="hero__scroll"><span data-i18n="home.hero.scroll">Larguez les amarres</span><svg viewBox="0 0 46 16" aria-hidden="true"><path d="M0 8 Q 5.75 0 11.5 8 T 23 8 T 34.5 8 T 46 8"/></svg></span>
+    <a class="hero__price" href="formules.html#tarifs" data-i18n="home.hero.price">Privatisation dès 300 €</a>
+    <a class="hero__scroll" href="#dicton"><span data-i18n="home.hero.scroll">Larguez les amarres</span><svg viewBox="0 0 46 16" aria-hidden="true"><path d="M0 8 Q 5.75 0 11.5 8 T 23 8 T 34.5 8 T 46 8"/></svg></a>
   </div>
 </section>
 
 <!-- 09:30 Le dicton -->
-<section class="s dicton" data-time="9.3" data-label="Le dicton" data-label-en="The saying">
+<section class="s dicton" id="dicton" data-time="9.3" data-label="Le dicton" data-label-en="The saying">
   <div class="dicton__giant" aria-hidden="true">Cassis</div>
   <div class="wrap dicton__grid">
     <div class="dicton__text">
@@ -133,7 +136,7 @@
   <div class="wrap">
     <div class="ancre__head">
       <p class="eyebrow" data-i18n="home.ancre.eyebrow">Pour qui, pour quoi</p>
-      <h2 class="ancre__title"><span data-split data-i18n="home.ancre.title">Levez l'ancre à Cassis</span><br><span class="rotator" data-rotator="en famille|en amoureux|entre amis|entre collaborateurs" data-rotator-en="with family|as a couple|with friends|with colleagues">en famille</span></h2>
+      <h2 class="ancre__title"><span data-split data-i18n="home.ancre.title">Levez l'ancre à Cassis</span><span class="rotator" data-rotator="en famille|en amoureux|entre amis|entre collaborateurs" data-rotator-en="with family|as a couple|with friends|with colleagues">en famille</span></h2>
     </div>
     <div class="cards">
       <a class="card" href="#parcours" data-tilt>
@@ -294,7 +297,7 @@
 </section>
 
 <!-- 19:00 Golden hour -->
-<section class="s golden t-gold" id="golden" data-time="18.4" data-time-end="20.4" data-label="Heure dorée" data-label-en="Golden hour">
+<section class="s golden t-gold" id="golden" data-time="18.4" data-time-end="21.0" data-label="Heure dorée" data-label-en="Golden hour">
   <svg class="strata" data-strata viewBox="0 0 1200 700" preserveAspectRatio="xMaxYMax meet" aria-hidden="true"></svg>
   <div class="wrap">
     <p class="eyebrow" data-i18n="home.gold.eyebrow">Tout l'été</p>
@@ -327,7 +330,7 @@
 </section>
 
 <!-- 22:00 Nuit -->
-<section class="s nuit t-night" id="evenements" data-time="21.2" data-label="Feu d'artifice" data-label-en="Fireworks">
+<section class="s nuit t-night" id="evenements" data-time="21.4" data-label="Feu d'artifice" data-label-en="Fireworks">
   <canvas class="fireworks" data-fireworks aria-hidden="true"></canvas>
   <div class="wrap nuit__grid">
     <div>

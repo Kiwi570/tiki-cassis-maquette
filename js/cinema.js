@@ -8,7 +8,7 @@ export function cinema(media, { at = 0, timeline = null } = {}) {
   const img = frame && frame.querySelector('img');
   const glint = media.querySelector('.hero__glint');
   if (!img) return null;
-  const shots = [img, frame.querySelector('video')].filter(Boolean);
+  const shots = [img];
   const tl = timeline || gsap.timeline();
   tl.fromTo(shots, { scale: 1.22 }, { scale: 1.04, duration: 3.8, ease: 'power3.out' }, at);
   if (glint) {
