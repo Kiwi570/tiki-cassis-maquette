@@ -26,8 +26,16 @@
 <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span><span class="cursor__label"></span></div>
 <div class="veil" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 L100 100 L100 100 Q50 100 0 100 Z"></path></svg></div>
 <div class="intro" aria-hidden="true">
-  <div class="intro__half intro__half--top"></div>
-  <div class="intro__half intro__half--bot"></div>
+  <svg class="intro__mask" width="100%" height="100%">
+    <defs>
+      <mask id="tikiMask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+        <rect x="0" y="0" width="100%" height="100%" fill="#fff"/>
+        <g class="intro__word"><text class="intro__text" text-anchor="middle" fill="#000" fill-opacity="0">TIKI</text></g>
+      </mask>
+    </defs>
+    <rect class="intro__night" x="0" y="0" width="100%" height="100%" mask="url(#tikiMask)"/>
+    <g class="intro__word"><text class="intro__text intro__text--stroke" text-anchor="middle">TIKI</text></g>
+  </svg>
   <div class="intro__stage">
     <svg viewBox="0 0 560 280"><clipPath id="introClip"><rect x="0" y="0" width="560" height="210"/></clipPath><circle class="intro__sun" cx="280" cy="250" r="44" clip-path="url(#introClip)"/><path class="intro__line" d="M0 210 L170 210 L196 196 L232 199 L262 187 L300 186 L330 182 L352 188 L372 206 L404 214 L430 210 L560 210"/></svg>
     <div class="intro__logo"><span class="logo"></span></div>
@@ -90,15 +98,15 @@
       <source media="(max-aspect-ratio: 4/5)" srcset="img/tiki-sortie-phare-cassis-540.webp 540w, img/tiki-sortie-phare-cassis-900.webp 900w, img/tiki-sortie-phare-cassis-1400.webp 1400w" sizes="100vw">
       <img src="img/tiki-sortie-du-port-960.webp" srcset="img/tiki-sortie-du-port-640.webp 640w, img/tiki-sortie-du-port-960.webp 960w, img/tiki-sortie-du-port-1600.webp 1600w, img/tiki-sortie-du-port-2400.webp 2400w" width="960" height="720" decoding="async" fetchpriority="high" sizes="100vw" alt="Bateau de promenade en bois quittant le port de Cassis, façades colorées en arrière-plan" data-i18n-attr="alt:home.hero.alt">
     </picture>
-    <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true" data-hero-video><source data-src="video/hero-calanques.webm" type="video/webm"><source data-src="video/hero-calanques.mp4" type="video/mp4"></video>
+    <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true" data-hero-video data-poster="img/hero-calanques-affiche.webp"><source data-src="video/hero-calanques.webm" type="video/webm"><source data-src="video/hero-calanques.mp4" type="video/mp4"></video>
     </div>
     <div class="hero__grain" aria-hidden="true"></div>
     <div class="hero__glint" aria-hidden="true"></div>
-    <p class="ai-note" data-ai-note hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7 4.3 13.1l1.1-4.3L2 6l4.4-.3z" fill="currentColor"/></svg><span data-i18n="home.hero.ai">Vidéo d'illustration générée par IA</span></p>
+    <div class="ai-note" data-ai-note hidden><svg class="ai-note__star" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l1.6 4.2 4.4.3-3.4 2.8 1.1 4.3L8 10.7 4.3 13.1l1.1-4.3L2 6l4.4-.3z" fill="currentColor"/></svg><span data-i18n="home.hero.ai">Vidéo d'illustration générée par IA</span><button class="ai-note__btn" type="button" data-video-toggle aria-pressed="false" aria-label="Mettre la vidéo en pause"><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="2.6" height="10" rx="1" fill="currentColor"/><rect x="9.4" y="3" width="2.6" height="10" rx="1" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6c0 .5.5.8.9.5l7.2-4.8a.6.6 0 0 0 0-1L5.9 2.7c-.4-.3-.9 0-.9.5z" fill="currentColor"/></svg></button></div>
     <div class="hero__shade"></div>
   </div>
   <div class="wrap hero__inner">
-    <p class="eyebrow hero__eyebrow" data-i18n="home.hero.eyebrow">Bateau traditionnel · construit en 1958</p>
+    <p class="eyebrow hero__eyebrow" data-hero-fade data-i18n="home.hero.eyebrow">Bateau traditionnel · construit en 1958</p>
     <h1 class="hero__title" data-hero-title data-i18n="home.hero.title">Entrez au cœur <em>du Parc national</em> des Calanques</h1>
     <p class="hero__lead" data-hero-fade data-i18n="home.hero.lead">À bord d'un bateau traditionnel en bois. Ouvert toute l'année au départ du Port de Cassis.</p>
     <div class="hero__ctas" data-hero-fade>
@@ -107,8 +115,8 @@
     </div>
   </div>
   <div class="wrap hero__meta" data-hero-fade>
-    <span data-i18n="home.hero.meta1">Quai Saint-Pierre · bateau n°5</span>
-    <span data-i18n="home.hero.meta2">12 passagers maximum</span>
+    <span class="hero__where" data-i18n="home.hero.meta1">Quai Saint-Pierre · bateau n°5</span>
+    <span class="hero__sun" data-sun><svg viewBox="0 0 20 14" aria-hidden="true"><path d="M1 12.5h18M4.5 12.5a5.5 5.5 0 0 1 11 0M10 1.5v2M3.2 4.2l1.4 1.4M16.8 4.2l-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-sun-text>Ouvert toute l'année</span></span>
     <a class="hero__price" href="formules.html#tarifs" data-i18n="home.hero.price">Privatisation dès 300 €</a>
     <a class="hero__scroll" href="#dicton"><span data-i18n="home.hero.scroll">Larguez les amarres</span><svg viewBox="0 0 46 16" aria-hidden="true"><path d="M0 8 Q 5.75 0 11.5 8 T 23 8 T 34.5 8 T 46 8"/></svg></a>
   </div>

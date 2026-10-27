@@ -1,4 +1,5 @@
-import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords } from './core.js';
+import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js';
+import { nextSunEvent, cassisTime } from './sun.js';
 import { cinema } from './cinema.js';
 import { createChart } from './chart.js';
 import { createFireworks } from './fireworks.js';
@@ -11,9 +12,46 @@ try { seen = sessionStorage.getItem('tiki-intro') === '1'; } catch (e) { /* stoc
 
 initCore({ veil: false, keepIntro: true });
 
-/* ---------- Ouverture : lever de soleil puis plan cinéma ---------- */
+/* ---------- Vidéo d'ouverture (illustration générée par IA, signalée à l'écran) ---------- */
 const hero = document.querySelector('.hero');
+const heroVideo = hero.querySelector('[data-hero-video]');
+const aiNote = hero.querySelector('[data-ai-note]');
+const toggle = hero.querySelector('[data-video-toggle]');
+const conn = navigator.connection || {};
+const lightData = conn.saveData || /(^|-)2g/.test(conn.effectiveType || '');
+const useVideo = !!heroVideo && !calm && !lightData && window.innerWidth / window.innerHeight >= 0.8;
+let userPaused = false;
+if (useVideo) {
+  heroVideo.poster = heroVideo.dataset.poster;
+  heroVideo.querySelectorAll('source').forEach((s) => { s.src = s.dataset.src; });
+  heroVideo.preload = 'auto';
+  heroVideo.load();
+  heroVideo.style.opacity = '1';
+  hero.classList.add('has-video');
+  if (aiNote) aiNote.hidden = false;
+  const play = () => { if (!userPaused) heroVideo.play().catch(() => {}); };
+  play();
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) play(); else heroVideo.pause(); }).observe(hero);
+  const label = () => { toggle.setAttribute('aria-label', userPaused ? d('playVideo') : d('pauseVideo')); toggle.setAttribute('aria-pressed', String(userPaused)); };
+  toggle.addEventListener('click', () => { userPaused = !userPaused; if (userPaused) heroVideo.pause(); else heroVideo.play().catch(() => {}); label(); });
+  onLang(label);
+  label();
+}
 
+/* ---------- Heure réelle du coucher (ou du lever) du soleil à Cassis ---------- */
+const sunText = hero.querySelector('[data-sun-text]');
+function renderSun() {
+  if (!sunText) return;
+  const lang = getLang();
+  const ev = nextSunEvent(new Date());
+  const t = cassisTime(ev.when, lang).replace(/^0/, '');
+  sunText.textContent = d('sun')(ev.kind, ev.tomorrow, t);
+}
+renderSun();
+onLang(renderSun);
+setInterval(renderSun, 60000);
+
+/* ---------- Ouverture : lever du jour, le mot TIKI, plongée dans la vidéo ---------- */
 const intro = document.querySelector('.intro');
 const finish = () => {
   root.classList.add('is-ready');
@@ -21,55 +59,90 @@ const finish = () => {
   try { sessionStorage.setItem('tiki-intro', '1'); } catch (e) { /* stockage indisponible */ }
 };
 
+function layoutWord() {
+  const W = window.innerWidth, H = window.innerHeight;
+  const texts = intro.querySelectorAll('.intro__text');
+  texts.forEach((t) => { t.setAttribute('font-size', '100'); t.setAttribute('x', W / 2); t.setAttribute('y', H / 2); });
+  const len = texts[0].getComputedTextLength() || 220;
+  const fs = Math.min((W * (W > 900 ? 0.62 : 0.84)) / len * 100, H * 0.62);
+  texts.forEach((t) => { t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('y', (H / 2 + fs * 0.34).toFixed(1)); });
+  // Point de plongée : le centre du premier « I »
+  let ox = W / 2, oy = H / 2, ext = fs * 0.3;
+  try { const r = texts[0].getExtentOfChar(1); ox = r.x + r.width / 2; oy = r.y + r.height * 0.55; ext = r.width; } catch (e) { /* mesure indisponible */ }
+  const stem = Math.max(6, ext * 0.34);
+  const reach = 2 * Math.max(ox, W - ox, oy, H - oy);
+  return { ox, oy, scale: (reach / stem) * 1.25, fs };
+}
+
 if (calm) {
   finish();
 } else {
   const title = hero.querySelector('[data-hero-title]');
   const split = splitWords(title);
   const fades = hero.querySelectorAll('[data-hero-fade]');
+  const stage = intro.querySelector('.intro__stage');
   const line = intro.querySelector('.intro__line');
   const sun = intro.querySelector('.intro__sun');
+  const words = intro.querySelectorAll('.intro__word');
+  const holeText = intro.querySelector('mask .intro__text');
+  const stroke = intro.querySelector('.intro__text--stroke');
+  const night = intro.querySelector('.intro__night');
+  const timeEl = intro.querySelector('.intro__time');
   const L = line.getTotalLength();
   const clock = { m: 6 * 60 + 58 };
-  const timeEl = intro.querySelector('.intro__time');
-  gsap.set(line, { strokeDasharray: L, strokeDashoffset: seen ? 0 : L });
-  const tl = gsap.timeline({ onComplete: finish });
-  if (!seen) {
-    tl.to(line, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' })
-      .from(sun, { attr: { cy: 320 }, duration: 1, ease: 'power2.out' }, 0.2)
-      .from(intro.querySelector('.intro__logo'), { opacity: 0, y: 16, duration: 0.6, ease: 'power2.out' }, 0.5)
-      .to(clock, { m: 9 * 60, duration: 1.2, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.2);
-  } else {
-    timeEl.textContent = '09:00';
+
+  const run = () => {
+    const g = layoutWord();
+    const dash = g.fs * 14;
+    gsap.set(words, { svgOrigin: `${g.ox} ${g.oy}`, scale: 1 });
+    gsap.set(stroke, { strokeDasharray: `${dash} ${dash}`, strokeDashoffset: dash });
+    gsap.set(line, { strokeDasharray: L, strokeDashoffset: seen ? 0 : L });
+    const tl = gsap.timeline({ onComplete: finish });
+    if (!seen) {
+      tl.to(line, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' })
+        .from(sun, { attr: { cy: 320 }, duration: 0.9, ease: 'power2.out' }, 0.15)
+        .from(intro.querySelector('.intro__logo'), { opacity: 0, y: 16, duration: 0.5, ease: 'power2.out' }, 0.4)
+        .to(clock, { m: 9 * 60, duration: 1, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.15)
+        .to(stage, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in' }, 1.12)
+        .add('word', 1.25)
+        .fromTo(holeText, { attr: { 'fill-opacity': 0 } }, { attr: { 'fill-opacity': 1 }, duration: 0.5, ease: 'power1.out' }, 'word')
+        .fromTo(words, { scale: 0.9 }, { scale: 1, duration: 0.75, ease: 'power2.out' }, 'word')
+        .fromTo(stroke, { opacity: 1, strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 'word')
+        .add('zoom', 'word+=0.7');
+    } else {
+      gsap.set(stage, { opacity: 0 });
+      gsap.set(holeText, { attr: { 'fill-opacity': 1 } });
+      gsap.set(stroke, { opacity: 1, strokeDashoffset: 0 });
+      tl.add('zoom', 0.3);
+    }
+    tl.to(stroke, { opacity: 0, duration: 0.25, ease: 'power1.in' }, 'zoom')
+      .to(words, { scale: g.scale, duration: 1.05, ease: 'expo.in' }, 'zoom')
+      .to(night, { opacity: 0, duration: 0.3, ease: 'none' }, 'zoom+=0.78')
+      .add('reveal', 'zoom+=0.8');
+    cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.5 });
+    if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'reveal+=0.05');
+    tl.from(fades, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.08 }, 'reveal+=0.3');
+  };
+  const fontReady = document.fonts && document.fonts.load ? document.fonts.load('400 100px "Instrument Serif"') : Promise.resolve();
+  Promise.race([fontReady, new Promise((r) => setTimeout(r, 700))]).then(run, run);
+
+  // Profondeur : la vidéo et le titre glissent en sens opposé sous la souris
+  const inner = hero.querySelector('.hero__inner');
+  if (fine) {
+    const layers = [heroVideo, hero.querySelector('.hero__frame img')].filter(Boolean);
+    gsap.set(layers, { scale: 1.06 });
+    const lx = gsap.quickTo(layers, 'x', { duration: 1.4, ease: 'power3' }), ly = gsap.quickTo(layers, 'y', { duration: 1.4, ease: 'power3' });
+    const tx = gsap.quickTo(inner, 'x', { duration: 1.6, ease: 'power3' }), ty = gsap.quickTo(inner, 'y', { duration: 1.6, ease: 'power3' });
+    hero.addEventListener('pointermove', (e) => {
+      const nx = e.clientX / window.innerWidth - 0.5, ny = e.clientY / window.innerHeight - 0.5;
+      lx(nx * -26); ly(ny * -16); tx(nx * 12); ty(ny * 8);
+    });
+    hero.addEventListener('pointerleave', () => { lx(0); ly(0); tx(0); ty(0); });
   }
-  tl.to(intro.querySelector('.intro__stage'), { opacity: 0, y: -10, duration: 0.35, ease: 'power2.in' }, seen ? 0.15 : 1.4)
-    .to(intro.querySelector('.intro__half--top'), { yPercent: -100, duration: 0.95, ease: 'expo.inOut' }, '<0.1')
-    .to(intro.querySelector('.intro__half--bot'), { yPercent: 100, duration: 0.95, ease: 'expo.inOut' }, '<')
-    .add('reveal', '<0.2');
-  cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.9 });
-  if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'reveal+=0.15');
-  tl.from(fades, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.1 }, 'reveal+=0.45');
 
-  gsap.to(hero.querySelector('.hero__inner'), { yPercent: -18, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
-}
-
-/* ---------- Vidéo d'ouverture (illustration générée par IA, signalée à l'écran) ---------- */
-const heroVideo = hero.querySelector('[data-hero-video]');
-const aiNote = hero.querySelector('[data-ai-note]');
-const conn = navigator.connection || {};
-const lightData = conn.saveData || /(^|-)2g/.test(conn.effectiveType || '');
-if (heroVideo && !calm && !lightData && window.innerWidth / window.innerHeight >= 0.8) {
-  heroVideo.querySelectorAll('source').forEach((s) => { s.src = s.dataset.src; });
-  heroVideo.preload = 'auto';
-  heroVideo.load();
-  heroVideo.addEventListener('playing', () => {
-    gsap.to(heroVideo, { opacity: 1, duration: 1.4, ease: 'power2.out' });
-    hero.classList.add('has-video');
-    if (aiNote) { aiNote.hidden = false; gsap.from(aiNote, { opacity: 0, y: -8, duration: 0.8, ease: 'power2.out' }); }
-  }, { once: true });
-  const play = () => heroVideo.play().catch(() => {});
-  if (document.readyState === 'complete') play(); else window.addEventListener('load', play, { once: true });
-  new IntersectionObserver(([e]) => { if (e.isIntersecting) play(); else heroVideo.pause(); }).observe(hero);
+  gsap.to(inner, { yPercent: -18, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+  // La vague du bas avance avec le défilement
+  ScrollTrigger.create({ trigger: hero, start: 'top top', end: 'bottom top', onUpdate: (st) => hero.style.setProperty('--tide', `${(st.progress * 540).toFixed(1)}px`) });
 }
 
 /* ---------- Le dicton : les mots s'allument au fil de la lecture ---------- */

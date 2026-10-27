@@ -158,7 +158,9 @@ const DYN = {
     errDate: 'Choisissez une date à venir.', errPers: 'Indiquez un nombre de personnes.', errNom: 'Indiquez votre nom.', errMail: 'Indiquez un e-mail valide, par exemple nom@exemple.fr.', errContact: 'Indiquez un e-mail valide.',
     type: { jour: 'Privatisation en journée', soiree: 'Soirée privatisée', partagee: 'Soirée en bateau partagé', evenement: 'Feu d’artifice', info: 'Question' },
     rDate: 'Date', rHeure: 'Départ', rDuree: 'Durée', rPers: 'Personnes', rSaison: 'Saison', rType: 'Sortie', rBbq: 'Barbecue', yes: 'Oui (à confirmer)', toDefine: 'à définir',
-    evtLabel: (e, y) => `${e.fr} ${y}`
+    evtLabel: (e, y) => `${e.fr} ${y}`,
+    pauseVideo: 'Mettre la vidéo en pause', playVideo: 'Relancer la vidéo',
+    sun: (kind, tomorrow, t) => kind === 'set' ? `Coucher du soleil ce soir à Cassis : ${t}` : (tomorrow ? `Lever du soleil demain à Cassis : ${t}` : `Lever du soleil à Cassis : ${t}`)
   },
   en: {
     high: 'High season', low: 'Low season', summer: 'June to September', sunday: 'Sunday in May', holiday: 'public holiday', bridge: 'May bridge day, to be confirmed', offpeak: 'October to May',
@@ -180,7 +182,9 @@ const DYN = {
     errDate: 'Choose a future date.', errPers: 'Enter a number of people.', errNom: 'Enter your name.', errMail: 'Enter a valid email, for example name@example.com.', errContact: 'Enter a valid email.',
     type: { jour: 'Daytime private charter', soiree: 'Private evening', partagee: 'Shared evening boat', evenement: 'Fireworks', info: 'Question' },
     rDate: 'Date', rHeure: 'Departure', rDuree: 'Duration', rPers: 'People', rSaison: 'Season', rType: 'Trip', rBbq: 'Barbecue', yes: 'Yes (to be confirmed)', toDefine: 'to be defined',
-    evtLabel: (e, y) => `${e.en} ${y}`
+    evtLabel: (e, y) => `${e.en} ${y}`,
+    pauseVideo: 'Pause the video', playVideo: 'Play the video',
+    sun: (kind, tomorrow, t) => kind === 'set' ? `Sunset in Cassis tonight: ${t}` : (tomorrow ? `Sunrise in Cassis tomorrow: ${t}` : `Sunrise in Cassis: ${t}`)
   }
 };
 
