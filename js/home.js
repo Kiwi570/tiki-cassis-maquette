@@ -53,6 +53,31 @@ if (calm) {
   gsap.to(hero.querySelector('.hero__inner'), { yPercent: -18, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
 }
 
+/* ---------- Vidéo d'ouverture (illustration générée par IA, signalée à l'écran) ---------- */
+const heroVideo = hero.querySelector('[data-hero-video]');
+const aiNote = hero.querySelector('[data-ai-note]');
+if (heroVideo && !calm && window.innerWidth / window.innerHeight >= 0.8) {
+  heroVideo.querySelectorAll('source').forEach((s) => { s.src = s.dataset.src; });
+  heroVideo.preload = 'auto';
+  heroVideo.load();
+  heroVideo.addEventListener('playing', () => {
+    gsap.to(heroVideo, { opacity: 1, duration: 1.4, ease: 'power2.out' });
+    if (aiNote) { aiNote.hidden = false; gsap.from(aiNote, { opacity: 0, y: -8, duration: 0.8, ease: 'power2.out' }); }
+  }, { once: true });
+  const play = () => heroVideo.play().catch(() => {});
+  if (document.readyState === 'complete') play(); else window.addEventListener('load', play, { once: true });
+  new IntersectionObserver(([e]) => { if (e.isIntersecting) play(); else heroVideo.pause(); }).observe(hero);
+}
+
+/* ---------- Le dicton : les mots s'allument au fil de la lecture ---------- */
+const dicton = document.querySelector('.dicton');
+if (dicton && !calm) {
+  const quote = dicton.querySelector('[data-words]');
+  const sq = window.SplitText ? window.SplitText.create(quote, { type: 'words', wordsClass: 'wq' }) : null;
+  if (sq) gsap.fromTo(sq.words, { opacity: 0.13, y: 12 }, { opacity: 1, y: 0, ease: 'none', stagger: 0.12, scrollTrigger: { trigger: quote, start: 'top 82%', end: 'bottom 45%', scrub: true } });
+  gsap.fromTo(dicton.querySelector('.dicton__giant'), { xPercent: 6 }, { xPercent: -38, ease: 'none', scrollTrigger: { trigger: dicton, start: 'top bottom', end: 'bottom top', scrub: true } });
+}
+
 /* ---------- Le parcours : sillage sur la carte ---------- */
 const chartHost = document.querySelector('[data-chart="home"]');
 const chart = createChart(chartHost);
