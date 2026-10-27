@@ -1,5 +1,5 @@
 import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords } from './core.js';
-import { createWater, hasWebGL } from './water.js';
+import { cinema } from './cinema.js';
 import { createChart } from './chart.js';
 import { createFireworks } from './fireworks.js';
 import { getLang, d, onLang } from './i18n.js';
@@ -11,15 +11,8 @@ try { seen = sessionStorage.getItem('tiki-intro') === '1'; } catch (e) { /* stoc
 
 initCore({ veil: false, keepIntro: true });
 
-/* ---------- Ouverture : lever de soleil puis reflet ---------- */
+/* ---------- Ouverture : lever de soleil puis plan cinéma ---------- */
 const hero = document.querySelector('.hero');
-const canvas = hero.querySelector('.hero__gl');
-let water = null;
-if (!calm && hasWebGL()) {
-  const portrait = window.innerWidth / window.innerHeight < 0.8;
-  const src = portrait ? 'img/tiki-sortie-phare-cassis-900.webp' : (window.innerWidth * (window.devicePixelRatio || 1) > 2000 ? 'img/tiki-sortie-du-port-2400.webp' : 'img/tiki-sortie-du-port-1600.webp');
-  water = createWater(canvas, { src });
-}
 
 const intro = document.querySelector('.intro');
 const finish = () => {
@@ -53,12 +46,10 @@ if (calm) {
     .to(intro.querySelector('.intro__half--top'), { yPercent: -100, duration: 0.95, ease: 'expo.inOut' }, '<0.1')
     .to(intro.querySelector('.intro__half--bot'), { yPercent: 100, duration: 0.95, ease: 'expo.inOut' }, '<')
     .add('reveal', '<0.2');
-  if (water) tl.to(water, { intro: 1, duration: 2, ease: 'power2.out' }, 'reveal-=0.2');
-  else tl.from(hero.querySelector('.hero__media picture'), { clipPath: 'inset(50% 0 50% 0)', scale: 1.15, duration: 1.6, ease: 'expo.out' }, 'reveal-=0.2');
+  cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.9 });
   if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'reveal+=0.15');
   tl.from(fades, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.1 }, 'reveal+=0.45');
 
-  ScrollTrigger.create({ trigger: hero, start: 'top top', end: 'bottom top', onUpdate: (s) => { if (water) water.scroll = s.progress; } });
   gsap.to(hero.querySelector('.hero__inner'), { yPercent: -18, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
 }
 
