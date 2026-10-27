@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="fr" data-page="contact">
+<head>
+<meta charset="utf-8">
+<title>Contact et réservation · TIKI Cassis</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Contactez Mathieu, capitaine du TIKI à Cassis, pour une sortie privatisée, une soirée d'été ou une question. Réponse sous 24 h.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TIKI Cassis">
+<meta property="og:title" content="Contact et réservation · TIKI Cassis">
+<meta property="og:description" content="Contactez Mathieu, capitaine du TIKI à Cassis, pour une sortie privatisée, une soirée d'été ou une question. Réponse sous 24 h.">
+<meta property="og:image" content="img/og-tiki-cassis.jpg">
+<meta name="theme-color" content="#0C1424">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230C1424'/%3E%3Ccircle cx='32' cy='38' r='13' fill='%23E8B25A'/%3E%3Crect x='0' y='38' width='64' height='26' fill='%230C1424'/%3E%3Cpath d='M8 38h48' stroke='%23F4F1EA' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/instrument-serif-regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/manrope-variable.woff" as="font" type="font/woff" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-calm')==='1')d.classList.add('calm');if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}})();</script>
+</head>
+<body>
+<a class="skip" href="#contenu" data-i18n="ui.skip">Aller au contenu</a>
+<div class="sky" aria-hidden="true"><canvas class="sky__stars"></canvas><div class="sky__sun"></div></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span><span class="cursor__label"></span></div>
+<div class="veil" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 L100 100 L100 100 Q50 100 0 100 Z"></path></svg></div>
+<header class="hdr" data-hdr>
+  <div class="wrap hdr__in">
+    <a class="hdr__logo" href="index.html" aria-label="TIKI Cassis, accueil" data-i18n-attr="aria-label:ui.logo"><span class="logo"></span></a>
+    <nav class="hdr__nav" aria-label="Navigation principale" data-i18n-attr="aria-label:ui.navlabel">
+      <a href="index.html" data-nav="index" data-i18n="nav.home">Accueil</a>
+      <a href="formules.html" data-nav="formules" data-i18n="nav.formules">Formules &amp; tarifs</a>
+      <a href="contact.html" data-nav="contact" aria-current="page" data-i18n="nav.contact">Contact &amp; réservation</a>
+    </nav>
+    <div class="hdr__tools">
+      <button class="tool" type="button" data-lang-toggle aria-label="Read in English" data-i18n-attr="aria-label:ui.langlabel"><span data-i18n="ui.lang">EN</span></button>
+      <button class="tool tool--text" type="button" data-sound aria-pressed="false"><span class="wavebars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-i18n="ui.sound">Écouter la mer</span></button>
+      <button class="tool tool--text" type="button" data-calm aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 3 2"/></svg><span data-i18n="ui.calm">Mode calme</span></button>
+      <a class="btn btn--sun btn--small magnetic" href="contact.html" data-i18n="ui.book">Réserver</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu" data-i18n-attr="aria-label:ui.menu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+<div class="menu" id="menu" data-lenis-prevent>
+  <div class="wrap" style="display:grid;gap:34px">
+    <nav aria-label="Menu" data-i18n-attr="aria-label:ui.menuLabel">
+      <a href="index.html" data-i18n="nav.homeEm">L'<em>accueil</em></a>
+      <a href="formules.html" data-i18n="nav.formulesEm">Formules <em>&amp; tarifs</em></a>
+      <a href="contact.html" data-i18n="nav.contactEm">Contact <em>&amp; réservation</em></a>
+    </nav>
+    <div class="menu__tools">
+      <button class="tool" type="button" data-sound aria-pressed="false"><span class="wavebars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-i18n="ui.sound">Écouter la mer</span></button>
+      <button class="tool" type="button" data-calm aria-pressed="false"><span data-i18n="ui.calm">Mode calme</span></button>
+    </div>
+    <div class="menu__contact">
+      <span class="num">+33 (0)6 68 26 33 45</span>
+      <span>calanques@tikicassis.fr</span>
+      <span data-i18n="ui.quai">Quai Saint-Pierre, bateau n°5, Cassis</span>
+    </div>
+  </div>
+</div>
+<div class="clock" aria-hidden="true">
+  <svg viewBox="0 0 46 26"><path class="clock__arc" d="M3 23 A20 20 0 0 1 43 23"/><line class="clock__horizon" x1="0" y1="23" x2="46" y2="23"/><circle class="clock__sun" cx="3" cy="23" r="3.6"/></svg>
+  <span class="clock__time">09:00</span>
+  <span class="clock__label">Lever du jour</span>
+</div>
+<nav class="actionbar" aria-label="Actions rapides" data-i18n-attr="aria-label:ui.quick">
+  <a href="tel:+33668263345"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><span data-i18n="ui.call">Appeler</span></a>
+  <a href="https://wa.me/33668263345" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 .8a4 4 0 0 1-1.8-1.8l.8-1-1-2z"/></svg><span>WhatsApp</span></a>
+  <a class="is-main" href="contact.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 17h18l-2 3H5z"/><path d="M12 3v14M12 4l6 9h-6"/></svg><span data-i18n="ui.request">Demander</span></a>
+</nav>
+
+<main id="contenu">
+
+<section class="s" data-time="16.8" data-label="Le capitaine" data-label-en="The skipper" style="padding-top:clamp(120px,14vw,180px)">
+  <div class="wrap capitaine__grid">
+    <figure class="portrait" data-parallax-box>
+      <img src="img/capitaine-mathieu-900.webp" srcset="img/capitaine-mathieu-480.webp 480w, img/capitaine-mathieu-900.webp 900w, img/capitaine-mathieu-1366.webp 1366w" width="900" height="1349" decoding="async" fetchpriority="high" sizes="(max-width:900px) 90vw, 40vw" alt="Mathieu, capitaine du TIKI, à la barre" data-i18n-attr="alt:home.cap.alt" data-parallax>
+      <span class="credit">Photo : Thomas Bertini Photography</span>
+    </figure>
+    <div>
+      <p class="eyebrow" data-i18n="co.eyebrow">Contact et réservation</p>
+      <h1 class="display" data-hero-title data-i18n="co.title">Ici Mathieu, <em>capitaine passionné</em></h1>
+      <div class="prose" style="margin-top:26px" data-hero-fade>
+        <p class="lead" data-i18n="co.p1">Capitaine passionné et enfant du pays, je vous propose de vous embarquer pour une balade en mer comme on les aime ici : simple, conviviale, pleine de soleil et d'émerveillement.</p>
+        <p data-i18n="co.p2">Pour une privatisation, remplissez la demande ci-dessous. Je réponds toujours en 24 heures maximum ; pensez à vérifier vos spams.</p>
+        <p data-i18n="co.p3">Pour les circuits standards, sans privatisation, rendez-vous sur le site du Groupement des Bateliers Cassidens ou directement sur le quai Saint-Pierre.</p>
+      </div>
+      <div class="direct" style="margin-top:28px" data-hero-fade>
+        <div class="contact-card">
+          <span class="contact-card__k" data-i18n="ct.phone">Téléphone et WhatsApp</span>
+          <span class="contact-card__v num">+33 (0)6 68 26 33 45</span>
+          <div class="contact-card__row"><button class="copy" type="button" data-copy="+33668263345" data-i18n="ui.copy">Copier</button><a class="link" href="tel:+33668263345" data-i18n="ui.call">Appeler</a><a class="link" href="https://wa.me/33668263345" target="_blank" rel="noopener">WhatsApp</a></div>
+        </div>
+        <div class="contact-card">
+          <span class="contact-card__k" data-i18n="ct.mail">E-mail</span>
+          <span class="contact-card__v">calanques@tikicassis.fr</span>
+          <div class="contact-card__row"><button class="copy" type="button" data-copy="calanques@tikicassis.fr" data-i18n="ui.copy">Copier</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="demande" data-time="17.8" data-label="Votre demande" data-label-en="Your request">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="co.req.eyebrow">Demande de privatisation</p>
+    <h2 class="display" data-split data-i18n="co.req.title">Préparons <em>votre sortie</em></h2>
+    <div class="req">
+      <div class="panel">
+        <ol class="progress" data-progress>
+          <li class="is-current" data-i18n="co.req.s1">Sortie</li>
+          <li data-i18n="co.req.s2">Date et passagers</li>
+          <li data-i18n="co.req.s3">Coordonnées</li>
+        </ol>
+        <form id="req-form" novalidate>
+          <fieldset class="fs" data-pane="0">
+            <legend data-i18n="co.req.l1">Quelle sortie ?</legend>
+            <div class="seg" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">
+              <input type="radio" name="type" id="t-jour" value="jour" checked><label for="t-jour"><span data-i18n="co.t.jour">Privatisation en journée</span><small data-i18n="co.t.jours">1 h à 8 h, toute l'année</small></label>
+              <input type="radio" name="type" id="t-soiree" value="soiree"><label for="t-soiree"><span data-i18n="co.t.soiree">Soirée privatisée</span><small data-i18n="co.t.soirees">L'été, 2 h ou 3 h</small></label>
+              <input type="radio" name="type" id="t-partagee" value="partagee"><label for="t-partagee"><span data-i18n="co.t.partagee">Soirée en bateau partagé</span><small data-i18n="co.t.partagees">50 € par personne</small></label>
+              <input type="radio" name="type" id="t-evt" value="evenement"><label for="t-evt"><span data-i18n="co.t.evt">Feu d'artifice</span><small data-i18n="co.t.evts">14 juillet, 15 août</small></label>
+              <input type="radio" name="type" id="t-info" value="info"><label for="t-info"><span data-i18n="co.t.info">Simple question</span><small data-i18n="co.t.infos">Je vous réponds sous 24 h</small></label>
+            </div>
+            <label class="check" for="r-bbq"><input type="checkbox" id="r-bbq" name="barbecue"><span><span data-i18n="fo.comp.bbq">Option barbecue à bord · 50 €</span><small data-i18n="co.bbq">À confirmer : le Parc national interdit l'usage du feu dans les Calanques.</small></span></label>
+          </fieldset>
+          <fieldset class="fs" data-pane="1" hidden>
+            <legend data-i18n="co.req.l2">Quand, et combien ?</legend>
+            <div class="grid2">
+              <label class="lbl" for="r-date"><span data-i18n="co.f.date">Date souhaitée</span><input class="input" type="date" id="r-date" name="date" required><span class="err" data-err="date"></span></label>
+              <label class="lbl" for="r-heure"><span data-i18n="co.f.heure">Heure de départ</span><select class="input" id="r-heure" name="heure"></select></label>
+              <label class="lbl" for="r-duree"><span data-i18n="co.f.duree">Durée</span><select class="input" id="r-duree" name="duree"></select></label>
+              <label class="lbl" for="r-pers"><span data-i18n="co.f.pers">Nombre de personnes</span><input class="input" type="number" id="r-pers" name="personnes" min="1" max="40" value="4" inputmode="numeric" required><span class="err" data-err="pers"></span></label>
+            </div>
+            <p class="season" data-season><i></i><span>…</span></p>
+            <div class="warn" data-warn hidden></div>
+          </fieldset>
+          <fieldset class="fs" data-pane="2" hidden>
+            <legend data-i18n="co.req.l3">Vos coordonnées</legend>
+            <div class="grid2">
+              <label class="lbl" for="r-nom"><span data-i18n="co.f.nom">Prénom, nom</span><input class="input" type="text" id="r-nom" name="nom" autocomplete="name" required><span class="err" data-err="nom"></span></label>
+              <label class="lbl" for="r-tel"><span data-i18n="co.f.tel">Téléphone</span><input class="input" type="tel" id="r-tel" name="tel" autocomplete="tel"><span class="err" data-err="tel"></span></label>
+            </div>
+            <label class="lbl" for="r-mail"><span data-i18n="co.f.mail">E-mail</span><input class="input" type="email" id="r-mail" name="email" autocomplete="email" required><span class="err" data-err="email"></span></label>
+            <label class="lbl" for="r-msg"><span data-i18n="co.f.msg">Message (envies, occasion, questions)</span><textarea class="input" id="r-msg" name="message"></textarea></label>
+          </fieldset>
+          <div class="done" data-done hidden tabindex="-1">
+            <span class="done__ico"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+            <h3 class="h3" data-i18n="co.done.t">Votre demande est prête</h3>
+            <p data-i18n="co.done.p">Ceci est une maquette : aucune demande n'a été envoyée. Sur le site final, le capitaine la recevra et vous répondra sous 24 heures.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn btn--ink btn--small" type="button" data-copy-recap><span data-i18n="co.done.copy">Copier le récapitulatif</span></button><button class="btn btn--ghost btn--small" type="button" data-restart><span data-i18n="co.done.again">Nouvelle demande</span></button></div>
+          </div>
+          <div class="nav-btns" data-navbtns>
+            <button class="btn btn--ghost btn--small" type="button" data-prev hidden><span data-i18n="co.prev">Retour</span></button>
+            <button class="btn btn--ink btn--small magnetic" type="button" data-next style="margin-left:auto"><span data-i18n="co.next">Continuer</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <button class="btn btn--sun btn--small magnetic" type="submit" data-submit hidden style="margin-left:auto"><span data-i18n="co.send">Envoyer la demande (simulation)</span></button>
+          </div>
+        </form>
+      </div>
+      <aside class="panel recap" aria-live="polite">
+        <p class="eyebrow" style="margin:0" data-i18n="co.recap">Récapitulatif</p>
+        <div class="result__total num" data-total>…</div>
+        <dl data-recap></dl>
+        <p class="note" data-i18n="co.recapnote">Tarif indicatif calculé d'après la grille publiée. Le capitaine confirme le programme et le prix.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="s rdv t-gold" data-time="19" data-label="Rendez-vous" data-label-en="Meeting point">
+  <div class="wrap rdv__grid">
+    <div>
+      <p class="eyebrow" data-i18n="home.rdv.eyebrow">Où trouver le TIKI</p>
+      <h2 class="display" data-split data-i18n="home.rdv.title">Quai Saint-Pierre, <em>bateau n°5</em></h2>
+      <p class="lead" style="margin-top:22px" data-i18n="co.rdv.lead">Port de Cassis (13260). Le TIKI est amarré quai Saint-Pierre, sous son parasol numéro 5.</p>
+      <div class="nearby">
+        <span class="chip"><i></i><span data-i18n="home.rdv.n1">Petit Casino à 30 m</span></span>
+        <span class="chip"><i></i><span data-i18n="home.rdv.n2">Spar à 170 m</span></span>
+        <span class="chip"><i></i><span data-i18n="home.rdv.n3">U-tile à 270 m</span></span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:26px"><a class="btn btn--ink magnetic" href="https://www.google.com/maps/search/?api=1&amp;query=Quai%20Saint-Pierre%2013260%20Cassis" target="_blank" rel="noopener"><span data-i18n="home.rdv.map">Ouvrir l'itinéraire</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      <div class="callout">
+        <strong data-i18n="home.rdv.std">Un circuit standard, sans privatisation ?</strong>
+        <p data-i18n="home.rdv.stdp">Les billets sont vendus uniquement par le Groupement des Bateliers Cassidens, en ligne ou sur le quai Saint-Pierre. Vous serez placés sur l'un des 15 bateaux du Groupement, pas forcément le TIKI.</p>
+        <a class="link" href="https://www.visite-calanques-cassis.com/fr/3-circuits" target="_blank" rel="noopener" style="justify-self:start" data-i18n="home.rdv.stdl">Site du Groupement</a>
+      </div>
+    </div>
+    <div class="quai" data-clip>
+      <img src="img/tiki-quai-saint-pierre-660.webp" srcset="img/tiki-quai-saint-pierre-660.webp 660w" width="660" height="651" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 45vw" alt="Le TIKI amarré au quai, sous son parasol marqué 5 Tiki" data-i18n-attr="alt:home.rdv.alt">
+      <span class="quai__pin" aria-hidden="true"></span><span class="quai__tag" data-i18n="home.rdv.tag">Vous êtes ici : bateau n°5</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div style="display:grid;gap:16px;align-content:start">
+        <span class="logo" role="img" aria-label="TIKI Cassis"></span>
+        <p data-i18n="foot.pitch">Bateau traditionnel en bois, construit en 1958. Sorties en mer et visite des calanques au départ de Cassis, toute l'année.</p>
+      </div>
+      <div>
+        <h3 data-i18n="foot.nav">Naviguer</h3>
+        <ul>
+          <li><a href="index.html" data-i18n="nav.home">Accueil</a></li>
+          <li><a href="formules.html" data-i18n="nav.formules">Formules &amp; tarifs</a></li>
+          <li><a href="contact.html" data-i18n="nav.contact">Contact &amp; réservation</a></li>
+          <li><a href="https://www.instagram.com/tiki_cassis/" target="_blank" rel="noopener">Instagram @tiki_cassis</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="foot.find">Nous trouver</h3>
+        <ul>
+          <li data-i18n="foot.addr1">Port de Cassis (13260)</li>
+          <li data-i18n="foot.addr2">Quai Saint-Pierre, bateau n°5</li>
+          <li class="num">+33 (0)6 68 26 33 45</li>
+          <li>calanques@tikicassis.fr</li>
+        </ul>
+      </div>
+      <div>
+        <h3 data-i18n="foot.legal">Informations</h3>
+        <ul>
+          <li><a href="mentions-legales.html" data-i18n="foot.mentions">Mentions légales</a></li>
+          <li><span data-i18n="foot.privacy">Confidentialité</span> <span class="todo" data-i18n="ui.todo">à compléter</span></li>
+          <li><span data-i18n="foot.cookies">Cookies</span> <span class="todo" data-i18n="ui.todo">à compléter</span></li>
+          <li><a href="https://www.visite-calanques-cassis.com/fr/3-circuits" target="_blank" rel="noopener" data-i18n="foot.groupement">Groupement des Bateliers Cassidens</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot__base">
+      <span>© 2026 TIKI Cassis · SIRET 984 159 111 00017</span>
+      <span class="demo-flag" data-i18n="foot.demo">Maquette de démonstration : formulaires simulés, contenus à valider</span>
+    </div>
+  </div>
+</footer>
+<script src="vendor/gsap/gsap.min.js" defer></script>
+<script src="vendor/gsap/ScrollTrigger.min.js" defer></script>
+<script src="vendor/gsap/SplitText.min.js" defer></script>
+<script type="module" src="js/contact.js"></script>
+</body>
+</html>
