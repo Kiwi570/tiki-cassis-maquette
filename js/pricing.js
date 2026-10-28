@@ -1,4 +1,4 @@
-import { TARIFS, PALIERS } from './data.js?v=20261028';
+import { TARIFS, PALIERS } from './data.js?v=20261028-2';
 
 const d0 = (y, m, d) => new Date(y, m - 1, d);
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();

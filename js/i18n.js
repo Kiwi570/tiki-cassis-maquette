@@ -127,6 +127,7 @@ const EN = {
   'co.recap': 'Summary', 'co.recapnote': 'Indicative price based on the published rates. The skipper confirms the programme and the price.',
   'co.rdv.lead': 'Port of Cassis (13260). The TIKI is moored at Quai Saint-Pierre, under its number 5 parasol.',
 
+  'nf.eyebrow': 'Error 404', 'nf.title': 'Page <em>not found</em>', 'nf.lead': 'This address does not lead to any page of the site.', 'nf.home': 'Back to home',
   'ml.eyebrow': 'Legal information', 'ml.title': 'Legal <em>notice</em>',
   'ml.intro': 'In accordance with French law no. 2004-575 of 21 June 2004 on confidence in the digital economy (LCEN), here are the parties involved in the tikicassis.fr website.',
   'ml.h1': 'Publisher', 'ml.p1': 'TIKI CASSIS, sole proprietorship represented by Mr Mathieu Allegre.<br>SIRET: 984 159 111 00017<br>Address: 13260 Cassis <span class="todo">full address to be completed</span><br>Phone: +33 6 68 26 33 45<br>Email: calanques@tikicassis.fr<br>Publication manager: Mathieu Allegre',

@@ -1,10 +1,10 @@
-import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js?v=20261028';
-import { nextSunEvent, cassisTime } from './sun.js?v=20261028';
-import { cinema } from './cinema.js?v=20261028';
+import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js?v=20261028-2';
+import { nextSunEvent, cassisTime } from './sun.js?v=20261028-2';
+import { cinema } from './cinema.js?v=20261028-2';
 import { createChart } from './chart.js';
-import { createFireworks } from './fireworks.js?v=20261028';
-import { getLang, d, onLang } from './i18n.js?v=20261028';
-import { PALIERS } from './data.js?v=20261028';
+import { createFireworks } from './fireworks.js?v=20261028-2';
+import { getLang, d, onLang } from './i18n.js?v=20261028-2';
+import { PALIERS } from './data.js?v=20261028-2';
 
 const root = document.documentElement;
 let seen = false;
@@ -99,30 +99,42 @@ if (calm) {
     gsap.set(line, { strokeDasharray: L, strokeDashoffset: seen ? 0 : L });
     const tl = gsap.timeline({ onComplete: finish });
     if (!seen) {
-      tl.to(line, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' })
-        .from(sun, { attr: { cy: 320 }, duration: 0.9, ease: 'power2.out' }, 0.15)
-        .from(intro.querySelector('.intro__logo'), { opacity: 0, y: 16, duration: 0.5, ease: 'power2.out' }, 0.4)
-        .to(clock, { m: 9 * 60, duration: 1, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.15)
-        .to(stage, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in' }, 1.12)
-        .add('word', 1.25)
-        .fromTo(holeText, { attr: { 'fill-opacity': 0 } }, { attr: { 'fill-opacity': 1 }, duration: 0.5, ease: 'power1.out' }, 'word')
-        .fromTo(words, { scale: 0.9 }, { scale: 1, duration: 0.75, ease: 'power2.out' }, 'word')
-        .fromTo(stroke, { opacity: 1, strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 'word')
-        .add('zoom', 'word+=0.7');
+      // Lever du jour court (0,8 s), puis le mot TIKI
+      tl.to(line, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.inOut' })
+        .from(sun, { attr: { cy: 320 }, duration: 0.6, ease: 'power2.out' }, 0.1)
+        .from(intro.querySelector('.intro__logo'), { opacity: 0, y: 16, duration: 0.35, ease: 'power2.out' }, 0.25)
+        .to(clock, { m: 9 * 60, duration: 0.6, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.1)
+        .to(stage, { opacity: 0, y: -12, duration: 0.25, ease: 'power2.in' }, 0.7)
+        .add('word', 0.8)
+        .fromTo(holeText, { attr: { 'fill-opacity': 0 } }, { attr: { 'fill-opacity': 1 }, duration: 0.4, ease: 'power1.out' }, 'word')
+        .fromTo(words, { scale: 0.9 }, { scale: 1, duration: 0.55, ease: 'power2.out' }, 'word')
+        .fromTo(stroke, { opacity: 1, strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 0.55, ease: 'power2.inOut' }, 'word')
+        .add('zoom', 'word+=0.5');
     } else {
       gsap.set(stage, { opacity: 0 });
       gsap.set(holeText, { attr: { 'fill-opacity': 1 } });
       gsap.set(stroke, { opacity: 1, strokeDashoffset: 0 });
       tl.add('zoom', 0.3);
     }
-    tl.to(stroke, { opacity: 0, duration: 0.25, ease: 'power1.in' }, 'zoom')
-      .to(words, { scale: g.scale, duration: 1.05, ease: 'expo.in' }, 'zoom')
-      .to(night, { opacity: 0, duration: 0.3, ease: 'none' }, 'zoom+=0.78')
-      .add('reveal', 'zoom+=0.8');
+    tl.to(stroke, { opacity: 0, duration: 0.2, ease: 'power1.in' }, 'zoom')
+      .to(words, { scale: g.scale, duration: 0.8, ease: 'expo.in' }, 'zoom')
+      .to(night, { opacity: 0, duration: 0.25, ease: 'none' }, 'zoom+=0.58')
+      .add('reveal', 'zoom+=0.6');
     cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.5 });
-    if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'reveal+=0.05');
-    tl.from(fades, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.08 }, 'reveal+=0.3');
+    if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 0.8, ease: 'expo.out', stagger: 0.04 }, 'reveal+=0.05');
+    tl.from(fades, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.06 }, 'reveal+=0.2');
+    introTl = tl;
+    if (skipped) tl.progress(1);
   };
+  // Un clic, une touche ou la molette passe l'ouverture
+  let introTl = null, skipped = false;
+  const skip = () => {
+    if (skipped) return;
+    skipped = true;
+    ['pointerdown', 'keydown', 'wheel'].forEach((t) => window.removeEventListener(t, skip));
+    if (introTl) introTl.progress(1);
+  };
+  ['pointerdown', 'keydown', 'wheel'].forEach((t) => window.addEventListener(t, skip, { passive: true }));
   const fontReady = document.fonts && document.fonts.load ? document.fonts.load('400 100px "Instrument Serif"') : Promise.resolve();
   Promise.race([fontReady, new Promise((r) => setTimeout(r, 700))]).then(run, run);
 
@@ -198,12 +210,18 @@ if (calm) {
   const state = { p: 0 };
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
+    // La carte garde ses proportions dans la place réelle laissée sous le titre
+    const parcours = document.querySelector('.parcours'), stepsEl = document.querySelector('[data-steps]');
+    const fitChart = () => parcours.style.setProperty('--carte-h', `${stepsEl.clientHeight}px`);
+    fitChart();
+    const ro = window.ResizeObserver ? new ResizeObserver(fitChart) : null;
+    if (ro) ro.observe(stepsEl);
     steps.forEach((s, i) => gsap.set(s, { autoAlpha: i === active ? 1 : 0, y: 0 }));
     const st = ScrollTrigger.create({
-      trigger: '.parcours', start: 'top top', end: '+=300%', pin: true, pinType: 'transform', anticipatePin: 1, scrub: true,
+      trigger: '.parcours', start: 'top top', end: '+=300%', pin: true, pinType: 'transform', scrub: true,
       onUpdate: (s) => setProgress(Math.min(4.99, s.progress * 5.2))
     });
-    return () => { st.kill(); steps.forEach((s) => gsap.set(s, { clearProps: 'all' })); };
+    return () => { st.kill(); if (ro) ro.disconnect(); parcours.style.removeProperty('--carte-h'); steps.forEach((s) => gsap.set(s, { clearProps: 'all' })); };
   });
   mm.add('(max-width: 900px)', () => {
     chartHost.style.position = 'sticky';

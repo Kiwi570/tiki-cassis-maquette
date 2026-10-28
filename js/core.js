@@ -1,10 +1,10 @@
 // Socle commun : défilement fluide, horloge de bord et ciel, curseur, transitions,
 // révélations, langue, son et mode calme.
-import { apply, setLang, getLang, d, onLang } from './i18n.js?v=20261028';
-import { toggleSea, setSpeed } from './sea-sound.js?v=20261028';
+import { apply, setLang, getLang, d, onLang } from './i18n.js?v=20261028-2';
+import { toggleSea, setSpeed } from './sea-sound.js?v=20261028-2';
 import { Lenis } from '../vendor/lenis/lenis.js';
-import { EVENEMENTS } from './data.js?v=20261028';
-import { eventStatus, isSummerEvening } from './pricing.js?v=20261028';
+import { EVENEMENTS } from './data.js?v=20261028-2';
+import { eventStatus, isSummerEvening } from './pricing.js?v=20261028-2';
 
 export const gsap = window.gsap;
 export const ScrollTrigger = window.ScrollTrigger;
@@ -144,6 +144,26 @@ function initHeader() {
     menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
   }
+}
+
+/* ---------- Hauteurs réelles des barres fixes (sections épinglées, dernier bloc) ---------- */
+function initBars() {
+  const bar = document.querySelector('.actionbar');
+  const set = () => {
+    if (hdr) root.style.setProperty('--entete-h', `${Math.round(hdr.offsetTop + hdr.offsetHeight)}px`);
+    root.style.setProperty('--barres-h', `${bar ? bar.offsetHeight : 0}px`);
+  };
+  set();
+  if (window.ResizeObserver) { const ro = new ResizeObserver(set); if (hdr) ro.observe(hdr); if (bar) ro.observe(bar); }
+  window.addEventListener('resize', set);
+  // La barre du bas s'efface sur le formulaire et le pied de page
+  if (!bar || !window.IntersectionObserver) return;
+  const inView = new Set();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); });
+    bar.classList.toggle('is-away', inView.size > 0);
+  });
+  document.querySelectorAll('main form, .foot').forEach((el) => io.observe(el));
 }
 
 /* ---------- Curseur hublot et boutons magnétiques ---------- */
@@ -472,12 +492,27 @@ export function initHublot() {
 /* ---------- Galerie horizontale ---------- */
 export function initTrack() {
   const track = document.querySelector('[data-track]');
-  if (!track || calm) return;
+  if (!track) return;
+  // Hauteur des photos : la place réelle de la piste, moins la légende et le décalage
+  const fit = () => {
+    if (!isDesktop()) { track.style.removeProperty('--shot-h'); return; }
+    const cs = getComputedStyle(track);
+    const room = track.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const cap = Math.max(0, ...[...track.querySelectorAll('.shot figcaption')].map((c) => c.offsetHeight));
+    const shots = track.querySelectorAll('.shot');
+    const gap = shots[0] ? parseFloat(getComputedStyle(shots[0]).rowGap) || 0 : 0;
+    const off = shots[1] ? parseFloat(getComputedStyle(shots[1]).marginTop) || 0 : 0;
+    track.style.setProperty('--shot-h', `${Math.round(Math.min(640, Math.max(120, room - cap - gap - off)))}px`);
+  };
+  fit();
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(track.closest('section'));
+  if (ScrollTrigger) ScrollTrigger.addEventListener('refreshInit', fit);
+  if (calm) return;
   const imgs = track.querySelectorAll('.shot__img img');
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
     const dist = () => track.scrollWidth - window.innerWidth;
-    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, pinType: 'transform', anticipatePin: 1, scrub: 0.6, invalidateOnRefresh: true } });
+    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, pinType: 'transform', scrub: 0.6, invalidateOnRefresh: true } });
     const skew = gsap.quickTo(imgs, 'skewX', { duration: 0.5, ease: 'power3' });
     const tick = () => { if (lenis) skew(clamp(lenis.velocity * 0.25, -8, 8)); };
     gsap.ticker.add(tick);
@@ -496,6 +531,7 @@ export function initCore({ veil = true, keepIntro = false } = {}) {
   }
   drawStars();
   initHeader();
+  initBars();
   initCursor();
   initMagnetic();
   initLinks();
