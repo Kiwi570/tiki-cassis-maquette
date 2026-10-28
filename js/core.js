@@ -156,14 +156,20 @@ function initBars() {
   set();
   if (window.ResizeObserver) { const ro = new ResizeObserver(set); if (hdr) ro.observe(hdr); if (bar) ro.observe(bar); }
   window.addEventListener('resize', set);
-  // La barre du bas s'efface sur le formulaire et le pied de page
-  if (!bar || !window.IntersectionObserver) return;
+  // La barre du bas n'apparaît qu'après le premier écran, et s'efface sur le formulaire et le pied de page
+  if (!bar) return;
   const inView = new Set();
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); });
-    bar.classList.toggle('is-away', inView.size > 0);
-  });
-  document.querySelectorAll('main form, .foot').forEach((el) => io.observe(el));
+  const update = () => bar.classList.toggle('is-away', window.scrollY < window.innerHeight * 0.9 || inView.size > 0);
+  if (window.IntersectionObserver) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); });
+      update();
+    });
+    document.querySelectorAll('main form, .foot').forEach((el) => io.observe(el));
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
 }
 
 /* ---------- Curseur hublot et boutons magnétiques ---------- */

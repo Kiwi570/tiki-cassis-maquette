@@ -163,7 +163,7 @@ p { margin: 0; }
 .actionbar a svg { width: 22px; height: 22px; }
 .actionbar a.is-main { background: var(--or); color: var(--nuit); }
 .actionbar { transition: transform .4s var(--ease), visibility 0s; }
-.actionbar.is-away { transform: translateY(110%); visibility: hidden; transition: transform .4s var(--ease), visibility 0s .4s; }
+.actionbar.is-away, .menu.is-open ~ .actionbar { transform: translateY(110%); visibility: hidden; transition: transform .4s var(--ease), visibility 0s .4s; }
 
 /* ---------- Boutons ---------- */
 .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 99px; border: 1px solid transparent; font-weight: 700; font-size: .98rem; letter-spacing: .01em; text-decoration: none; cursor: pointer; overflow: hidden; isolation: isolate; transition: color .4s; }
