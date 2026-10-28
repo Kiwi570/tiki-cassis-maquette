@@ -1,10 +1,10 @@
 // Socle commun : défilement fluide, horloge de bord et ciel, curseur, transitions,
 // révélations, langue, son et mode calme.
-import { apply, setLang, getLang, d, onLang } from './i18n.js';
-import { toggleSea, setSpeed } from './sea-sound.js';
+import { apply, setLang, getLang, d, onLang } from './i18n.js?v=20261028';
+import { toggleSea, setSpeed } from './sea-sound.js?v=20261028';
 import { Lenis } from '../vendor/lenis/lenis.js';
-import { EVENEMENTS } from './data.js';
-import { eventStatus, isSummerEvening } from './pricing.js';
+import { EVENEMENTS } from './data.js?v=20261028';
+import { eventStatus, isSummerEvening } from './pricing.js?v=20261028';
 
 export const gsap = window.gsap;
 export const ScrollTrigger = window.ScrollTrigger;

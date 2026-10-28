@@ -1,6 +1,6 @@
 // Ouverture des pages intérieures : titre qui monte, photo en plan cinéma.
-import { gsap, calm, splitWords } from './core.js';
-import { cinema } from './cinema.js';
+import { gsap, calm, splitWords } from './core.js?v=20261028';
+import { cinema } from './cinema.js?v=20261028';
 
 export function pageHero() {
   if (calm) return;

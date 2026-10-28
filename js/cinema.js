@@ -1,6 +1,6 @@
 // « Plan cinéma » : la photo reste nette. Lent travelling arrière, un reflet de soleil
 // balaie l'image une fois, puis une dérive très douce et un léger parallaxe au défilement.
-import { gsap, calm } from './core.js';
+import { gsap, calm } from './core.js?v=20261028';
 
 export function cinema(media, { at = 0, timeline = null } = {}) {
   if (!media || calm || !gsap) return null;

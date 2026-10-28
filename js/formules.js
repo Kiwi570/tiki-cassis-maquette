@@ -1,10 +1,10 @@
-import { initCore, startReveals, gsap, calm } from './core.js';
-import { pageHero } from './page-hero.js';
+import { initCore, startReveals, gsap, calm } from './core.js?v=20261028';
+import { pageHero } from './page-hero.js?v=20261028';
 import { createChart } from './chart.js';
-import { createFireworks } from './fireworks.js';
-import { getLang, d, onLang } from './i18n.js';
-import { quote, route, season, fmtEUR, eventStatus, isSummerEvening } from './pricing.js';
-import { TARIFS, EVENEMENTS } from './data.js';
+import { createFireworks } from './fireworks.js?v=20261028';
+import { getLang, d, onLang } from './i18n.js?v=20261028';
+import { quote, route, season, fmtEUR, eventStatus, isSummerEvening } from './pricing.js?v=20261028';
+import { TARIFS, EVENEMENTS } from './data.js?v=20261028';
 
 initCore();
 pageHero();

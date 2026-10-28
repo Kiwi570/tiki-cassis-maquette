@@ -1,8 +1,8 @@
-import { initCore, startReveals, gsap, calm, lenis } from './core.js';
-import { pageHero } from './page-hero.js';
-import { getLang, d, onLang } from './i18n.js';
-import { quote, fmtEUR, isSummerEvening } from './pricing.js';
-import { HEURES_DEPART, TARIFS } from './data.js';
+import { initCore, startReveals, gsap, calm, lenis } from './core.js?v=20261028';
+import { pageHero } from './page-hero.js?v=20261028';
+import { getLang, d, onLang } from './i18n.js?v=20261028';
+import { quote, fmtEUR, isSummerEvening } from './pricing.js?v=20261028';
+import { HEURES_DEPART, TARIFS } from './data.js?v=20261028';
 
 initCore();
 pageHero();

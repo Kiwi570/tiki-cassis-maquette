@@ -1,10 +1,10 @@
-import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js';
-import { nextSunEvent, cassisTime } from './sun.js';
-import { cinema } from './cinema.js';
+import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js?v=20261028';
+import { nextSunEvent, cassisTime } from './sun.js?v=20261028';
+import { cinema } from './cinema.js?v=20261028';
 import { createChart } from './chart.js';
-import { createFireworks } from './fireworks.js';
-import { getLang, d, onLang } from './i18n.js';
-import { PALIERS } from './data.js';
+import { createFireworks } from './fireworks.js?v=20261028';
+import { getLang, d, onLang } from './i18n.js?v=20261028';
+import { PALIERS } from './data.js?v=20261028';
 
 const root = document.documentElement;
 let seen = false;
