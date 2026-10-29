@@ -2,7 +2,6 @@
 <html lang="fr" data-page="index">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex, nofollow">
 <title>TIKI Cassis</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -11,21 +10,21 @@
 <meta property="og:site_name" content="TIKI Cassis">
 <meta property="og:title" content="TIKI Cassis">
 <meta property="og:description" content="Le TIKI, bateau traditionnel en bois du Port de Cassis construit en 1958 : visite des calanques de Cassis à Marseille, baignade, soirées d'été et privatisation, toute l'année.">
-<meta property="og:image" content="https://tiki-cassis-maquette.vercel.app/img/og-tiki-cassis.jpg">
+<meta property="og:image" content="img/og-tiki-cassis.jpg">
 <meta name="theme-color" content="#0C1424">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230C1424'/%3E%3Ccircle cx='32' cy='38' r='13' fill='%23E8B25A'/%3E%3Crect x='0' y='38' width='64' height='26' fill='%230C1424'/%3E%3Cpath d='M8 38h48' stroke='%23F4F1EA' stroke-width='3'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/instrument-serif-regular.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="fonts/manrope-variable.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=20261028-2">
+<link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"LocalBusiness","name":"TIKI Cassis","description":"Bateau traditionnel en bois construit en 1958 : sorties en mer et visite des calanques au départ du Port de Cassis, toute l'année.","telephone":"+33668263345","email":"calanques@tikicassis.fr","image":"img/og-tiki-cassis.jpg","address":{"@type":"PostalAddress","streetAddress":"Quai Saint-Pierre, Port de Cassis","postalCode":"13260","addressLocality":"Cassis","addressCountry":"FR"},"sameAs":["https://www.instagram.com/tiki_cassis/"]}</script>
-<script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-calm')==='1')d.classList.add('calm');if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}})();</script>
+<script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-calm')==='1')d.classList.add('calm');if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}try{if(sessionStorage.getItem('tiki-intro')==='1')d.classList.add('intro-seen');}catch(e){}var nv=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(!d.classList.contains('calm')&&d.getAttribute('data-page')==='index'&&nv.type!=='back_forward'){d.classList.add('is-locked');try{history.scrollRestoration='manual';}catch(e){}setTimeout(function(){d.classList.remove('is-locked');},7000);}if(!d.classList.contains('calm')&&d.getAttribute('data-page')!=='index'){d.classList.add('veil-pending');setTimeout(function(){d.classList.remove('veil-pending');},4000);}})();</script>
 </head>
 <body>
 <a class="skip" href="#contenu" data-i18n="ui.skip">Aller au contenu</a>
 <div class="sky" aria-hidden="true"><canvas class="sky__stars"></canvas><div class="sky__sun"></div></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="cursor" aria-hidden="true"><span class="cursor__ring"></span><span class="cursor__dot"></span><span class="cursor__label"></span></div>
-<div class="veil" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 L100 100 L100 100 Q50 100 0 100 Z"></path></svg></div>
+<div class="veil" aria-hidden="true"><div class="veil__cover"></div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 L100 100 L100 100 Q50 100 0 100 Z"></path></svg></div>
 <div class="intro" aria-hidden="true">
   <svg class="intro__mask" width="100%" height="100%">
     <defs>
@@ -38,7 +37,7 @@
     <g class="intro__word"><text class="intro__text intro__text--stroke" text-anchor="middle">TIKI</text></g>
   </svg>
   <div class="intro__stage">
-    <svg viewBox="0 0 560 280"><clipPath id="introClip"><rect x="0" y="0" width="560" height="210"/></clipPath><circle class="intro__sun" cx="280" cy="250" r="44" clip-path="url(#introClip)"/><path class="intro__line" d="M0 210 L170 210 L196 196 L232 199 L262 187 L300 186 L330 182 L352 188 L372 206 L404 214 L430 210 L560 210"/></svg>
+    <svg viewBox="0 0 560 280"><clipPath id="introClip"><rect x="0" y="0" width="560" height="210"/></clipPath><circle class="intro__sun" cx="280" cy="320" r="44" clip-path="url(#introClip)"/><path class="intro__line" pathLength="1" d="M0 210 L170 210 L196 196 L232 199 L262 187 L300 186 L330 182 L352 188 L372 206 L404 214 L430 210 L560 210"/></svg>
     <div class="intro__logo"><span class="logo"></span></div>
     <div class="intro__time">06:58</div>
   </div>
@@ -107,7 +106,7 @@
     <div class="hero__shade"></div>
   </div>
   <div class="wrap hero__inner">
-    <p class="eyebrow hero__eyebrow" data-hero-fade data-i18n="home.hero.eyebrow">Bateau traditionnel · construit en 1958</p>
+    <p class="eyebrow hero__eyebrow" data-hero-fade data-i18n="home.hero.eyebrow">Bateau traditionnel&nbsp;· construit&nbsp;en&nbsp;1958</p>
     <h1 class="hero__title" data-hero-title data-i18n="home.hero.title">Entrez au cœur <em>du Parc national</em> des Calanques</h1>
     <p class="hero__lead" data-hero-fade data-i18n="home.hero.lead">À bord d'un bateau traditionnel en bois. Ouvert toute l'année au départ du Port de Cassis.</p>
     <div class="hero__ctas" data-hero-fade>
@@ -116,7 +115,7 @@
     </div>
   </div>
   <div class="wrap hero__meta" data-hero-fade>
-    <span class="hero__where" data-i18n="home.hero.meta1">Quai Saint-Pierre · bateau n°5</span>
+    <span class="hero__where" data-i18n="home.hero.meta1">Quai Saint-Pierre&nbsp;· bateau n°5</span>
     <span class="hero__sun" data-sun><svg viewBox="0 0 20 14" aria-hidden="true"><path d="M1 12.5h18M4.5 12.5a5.5 5.5 0 0 1 11 0M10 1.5v2M3.2 4.2l1.4 1.4M16.8 4.2l-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span data-sun-text>Ouvert toute l'année</span></span>
     <a class="hero__price" href="formules.html#tarifs" data-i18n="home.hero.price">Privatisation dès 300 €</a>
     <a class="hero__scroll" href="#dicton"><span data-i18n="home.hero.scroll">Larguez les amarres</span><svg viewBox="0 0 46 16" aria-hidden="true"><path d="M0 8 Q 5.75 0 11.5 8 T 23 8 T 34.5 8 T 46 8"/></svg></a>
@@ -165,7 +164,7 @@
       </a>
       <a class="card" href="formules.html#tarifs" data-tilt>
         <div class="card__img"><img src="img/tiki-mouillage-turquoise-1200.webp" srcset="img/tiki-mouillage-turquoise-640.webp 640w, img/tiki-mouillage-turquoise-1200.webp 1200w, img/tiki-mouillage-turquoise-2400.webp 2400w" width="1200" height="900" decoding="async" loading="lazy" sizes="(max-width:640px) 100vw, (max-width:1100px) 50vw, 25vw" alt="Le TIKI au mouillage dans une eau turquoise devant une côte de pins" data-i18n-attr="alt:home.c4.alt"></div>
-        <div class="card__body"><span class="card__k" data-i18n="home.c4.k">De 1 h à 8 h</span><h3 class="card__t" data-i18n="home.c4.t">Privatisation sur mesure</h3><p class="card__p" data-i18n="home.c4.p">Votre programme, défini avec le capitaine selon vos envies et la météo.</p><span class="card__more"><span data-i18n="home.c.more4">Voir les tarifs</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
+        <div class="card__body"><span class="card__k" data-i18n="home.c4.k">De 1&nbsp;h à 8&nbsp;h</span><h3 class="card__t" data-i18n="home.c4.t">Privatisation sur mesure</h3><p class="card__p" data-i18n="home.c4.p">Votre programme, défini avec le capitaine selon vos envies et la météo.</p><span class="card__more"><span data-i18n="home.c.more4">Voir les tarifs</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
         <span class="card__shine"></span>
       </a>
     </div>
@@ -184,37 +183,37 @@
         <p class="note" style="max-width:26em" data-i18n="home.route.note">Temps de navigation aller-retour depuis le port, sans arrêt. Ajoutez le temps de baignade et de détente que vous voulez.</p>
       </div>
       <div class="chart" data-chart="home">
-        <div class="chart__chrono" aria-live="polite"><span class="chrono__time">0 h 00</span><span class="chrono__count">0 / 9 calanques</span></div>
+        <div class="chart__chrono" aria-live="polite"><span class="chrono__time">0&nbsp;h&nbsp;00</span><span class="chrono__count">0 / 9 calanques</span></div>
         <p class="chart__note" data-i18n="home.route.legal">Carte indicative, ne pas utiliser pour la navigation.</p>
       </div>
       <ol class="steps" data-steps>
         <li class="step is-active" data-step="0">
           <div class="step__media"><img src="img/tiki-dans-une-calanque-1170.webp" srcset="img/tiki-dans-une-calanque-640.webp 640w, img/tiki-dans-une-calanque-1170.webp 1170w" width="1170" height="767" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 36vw" alt="Bateau dans une calanque vue depuis la falaise, entre les pins" data-i18n-attr="alt:home.s0.alt"></div>
-          <span class="step__dur num" data-i18n="home.s0.d">1 h · 3 calanques</span>
+          <span class="step__dur num" data-i18n="home.s0.d">1&nbsp;h&nbsp;· 3 calanques</span>
           <h3 class="step__t" data-i18n="home.s0.t">Port-Miou, Port-Pin, En-Vau</h3>
           <p class="step__p" data-i18n="home.s0.p">Les trois plus proches du port : l'idéal pour une première découverte, ou pour garder du temps pour la baignade.</p>
         </li>
         <li class="step" data-step="1">
           <div class="step__media"><img src="img/calanque-vue-falaise-720.webp" srcset="img/calanque-vue-falaise-480.webp 480w, img/calanque-vue-falaise-720.webp 720w" width="720" height="1600" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 36vw" alt="Calanque turquoise entourée de pins, vue depuis les hauteurs" data-i18n-attr="alt:home.s1.alt"></div>
-          <span class="step__dur num" data-i18n="home.s1.d">1 h 20 · 5 calanques</span>
+          <span class="step__dur num" data-i18n="home.s1.d">1&nbsp;h&nbsp;20&nbsp;· 5 calanques</span>
           <h3 class="step__t" data-i18n="home.s1.t">+ L'Oule et Devenson</h3>
           <p class="step__p" data-i18n="home.s1.p">On longe les grandes falaises blanches jusqu'à Devenson.</p>
         </li>
         <li class="step" data-step="2">
           <div class="step__media"><img src="img/grotte-bleue-1200.webp" srcset="img/grotte-bleue-640.webp 640w, img/grotte-bleue-1200.webp 1200w, img/grotte-bleue-2048.webp 2048w" width="1200" height="800" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 36vw" alt="Intérieur d'une grotte marine éclairée par une eau bleu turquoise" data-i18n-attr="alt:home.s2.alt"></div>
-          <span class="step__dur num" data-i18n="home.s2.d">2 h 10 · 8 calanques</span>
+          <span class="step__dur num" data-i18n="home.s2.d">2&nbsp;h&nbsp;10&nbsp;· 8 calanques</span>
           <h3 class="step__t" data-i18n="home.s2.t">+ l'Œil de Verre, Sugiton, Morgiou</h3>
           <p class="step__p" data-i18n="home.s2.p">Et quelques trésors cachés dont le capitaine connaît les secrets : la Grotte Bleue, le Chat de l'Aiguille.</p>
         </li>
         <li class="step" data-step="3">
           <div class="step__media"><img src="img/tiki-navigation-pointe-960.webp" srcset="img/tiki-navigation-pointe-640.webp 640w, img/tiki-navigation-pointe-960.webp 960w, img/tiki-navigation-pointe-1500.webp 1500w" width="960" height="540" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 36vw" alt="Le TIKI navigue au pied d'une pointe rocheuse plantée de pins" data-i18n-attr="alt:home.s3.alt"></div>
-          <span class="step__dur num" data-i18n="home.s3.d">3 h · 9 calanques</span>
+          <span class="step__dur num" data-i18n="home.s3.d">3&nbsp;h&nbsp;· 9 calanques</span>
           <h3 class="step__t" data-i18n="home.s3.t">+ Sormiou, aux portes de Marseille</h3>
           <p class="step__p" data-i18n="home.s3.p">Le grand tour du Parc national, de Cassis à Marseille et retour.</p>
         </li>
         <li class="step step--east" data-step="4">
           <div class="step__media"><img src="img/ile-verte-1134.webp" srcset="img/ile-verte-640.webp 640w, img/ile-verte-1134.webp 1134w" width="1134" height="850" decoding="async" loading="lazy" sizes="(max-width:900px) 100vw, 36vw" alt="Vue sur la mer depuis la terrasse ombragée du restaurant de l'île Verte" data-i18n-attr="alt:home.s4.alt"></div>
-          <span class="step__dur num" data-i18n="home.s4.d">6 h minimum · l'autre cap</span>
+          <span class="step__dur num" data-i18n="home.s4.d">6&nbsp;h minimum&nbsp;· l'autre cap</span>
           <h3 class="step__t" data-i18n="home.s4.t">Cap Canaille, Figuerolles, Mugel, île Verte</h3>
           <p class="step__p" data-i18n="home.s4.p">Sous la plus haute falaise maritime de France, puis baignade autour de l'île Verte et déjeuner sur l'île (restaurant ouvert d'avril à octobre, selon la météo).</p>
         </li>
@@ -274,12 +273,12 @@
       <h2 class="display" data-split data-i18n="home.cap.title">Ici Mathieu, <em>enfant du pays</em></h2>
       <blockquote class="quote" data-ink-lines data-i18n="home.cap.quote">« Je vous propose de vous embarquer pour une balade en mer comme on les aime ici : simple, conviviale, pleine de soleil et d'émerveillement. »</blockquote>
       <div class="sign"><svg viewBox="0 0 120 44" aria-hidden="true"><path data-draw d="M4 30 C 14 6, 22 6, 20 30 C 19 38, 28 14, 34 22 C 38 28, 40 30, 46 18 C 48 28, 52 32, 58 20 C 62 12, 64 30, 70 26 C 76 22, 80 16, 84 24 C 88 32, 96 28, 116 14"/></svg><span data-i18n="home.cap.sign">Mathieu, capitaine passionné</span></div>
-      <div class="chips"><span class="chip"><i></i><span data-i18n="home.cap.chip1">Réponse sous 24 h</span></span><span class="chip"><i></i><span data-i18n="home.cap.chip2">Programme 100 % personnalisé</span></span></div>
+      <div class="chips"><span class="chip"><i></i><span data-i18n="home.cap.chip1">Réponse sous 24&nbsp;h</span></span><span class="chip"><i></i><span data-i18n="home.cap.chip2">Programme 100 % personnalisé</span></span></div>
       <div class="joutes" data-reveal>
         <img src="img/joute-chute-900.webp" srcset="img/joute-chute-480.webp 480w, img/joute-chute-900.webp 900w" width="900" height="1261" decoding="async" loading="lazy" sizes="140px" alt="Joute provençale : un jouteur tombe à l'eau depuis la tintaine" data-i18n-attr="alt:home.cap.joutealt">
         <div>
           <h3 data-i18n="home.cap.jt">Aussi jouteur aux Francs Jouteurs Cassidens</h3>
-          <p data-i18n="home.cap.jp">De juin à septembre, joutes provençales dans le port les mercredis et samedis vers 18 h. Initiation possible : 10 € par personne pour soutenir l'association, de 30 min à 2 h, ouverte à tous.</p>
+          <p data-i18n="home.cap.jp">De juin à septembre, joutes provençales dans le port les mercredis et samedis vers 18&nbsp;h. Initiation possible : 10 € par personne pour soutenir l'association, de 30 min à 2&nbsp;h, ouverte à tous.</p>
         </div>
       </div>
     </div>
@@ -325,8 +324,8 @@
         <span class="status" data-season-status><i></i><span>…</span></span>
         <p class="lead" style="margin-block:22px" data-i18n="home.gold.lead">Des températures plus douces, une eau toujours aussi chaude et de beaux couchers de soleil, selon l'heure.</p>
         <div class="tickets">
-          <div class="ticket"><span class="ticket__k" data-i18n="home.gold.k1">Bateau partagé · 2 h</span><span class="ticket__price num">50 € <small data-i18n="home.gold.pp">/ pers.</small></span><p data-i18n="home.gold.p1">Départ confirmé à partir de 8 personnes.</p></div>
-          <div class="ticket"><span class="ticket__k" data-i18n="home.gold.k2">Privatisation · 1 à 12 pers.</span><span class="ticket__price num">400 € <small data-i18n="home.gold.2h">2 h</small></span><p data-i18n="home.gold.p2">600 € pour 3 h.</p></div>
+          <div class="ticket"><span class="ticket__k" data-i18n="home.gold.k1">Bateau partagé&nbsp;· 2&nbsp;h</span><span class="ticket__price num">50 € <small data-i18n="home.gold.pp">/ pers.</small></span><p data-i18n="home.gold.p1">Départ confirmé à partir de 8 personnes.</p></div>
+          <div class="ticket"><span class="ticket__k" data-i18n="home.gold.k2">Privatisation&nbsp;· 1 à 12 pers.</span><span class="ticket__price num">400 € <small data-i18n="home.gold.2h">2&nbsp;h</small></span><p data-i18n="home.gold.p2">600 € pour 3&nbsp;h.</p></div>
         </div>
         <div class="aperitif" data-reveal>
           <img src="img/aperitif-tapenade-canaille-575.webp" srcset="img/aperitif-tapenade-canaille-480.webp 480w, img/aperitif-tapenade-canaille-575.webp 575w" width="575" height="1037" decoding="async" loading="lazy" sizes="120px" alt="Toasts de tapenade et gobelets du TIKI sur la table du bateau, face au Cap Canaille" data-i18n-attr="alt:home.gold.apalt">
@@ -401,7 +400,7 @@
 <section class="s final t-night" data-time="22.8" data-label="À très vite" data-label-en="See you soon">
   <div class="wrap">
     <p class="eyebrow" data-i18n="home.final.eyebrow">Infos et réservations</p>
-    <h2 class="final__title" data-split data-i18n="home.final.title">Le capitaine répond <em>sous 24 h</em></h2>
+    <h2 class="final__title" data-split data-i18n="home.final.title">Le capitaine répond <em>sous 24&nbsp;h</em></h2>
     <div class="contacts">
       <div class="contact-card" data-reveal>
         <span class="contact-card__k" data-i18n="ct.phone">Téléphone et WhatsApp</span>
@@ -463,7 +462,7 @@
       </div>
     </div>
     <div class="foot__base">
-      <span>© 2026 TIKI Cassis · SIRET 984 159 111 00017</span>
+      <span>© 2026 TIKI Cassis&nbsp;· SIRET 984 159 111 00017</span>
       <span class="demo-flag" data-i18n="foot.demo">Maquette de démonstration : formulaires simulés, contenus à valider</span>
     </div>
   </div>
@@ -471,6 +470,6 @@
 <script src="vendor/gsap/gsap.min.js" defer></script>
 <script src="vendor/gsap/ScrollTrigger.min.js" defer></script>
 <script src="vendor/gsap/SplitText.min.js" defer></script>
-<script type="module" src="js/home.js?v=20261028-2"></script>
+<script type="module" src="js/home.js"></script>
 </body>
 </html>

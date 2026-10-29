@@ -1,4 +1,4 @@
-import { TARIFS, PALIERS } from './data.js?v=20261028-2';
+import { TARIFS, PALIERS } from './data.js';
 
 const d0 = (y, m, d) => new Date(y, m - 1, d);
 const sameDay = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -75,8 +75,8 @@ export function route(minutes) {
 export const fmtEUR = (n, lang = 'fr') => new Intl.NumberFormat(lang === 'en' ? 'en-GB' : 'fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 export const fmtMinutes = (m, lang = 'fr') => {
   const h = Math.floor(m / 60), r = m % 60;
-  if (lang === 'en') return h ? `${h} h${r ? ' ' + String(r).padStart(2, '0') : ''}` : `${r} min`;
-  return h ? `${h} h${r ? ' ' + String(r).padStart(2, '0') : ''}` : `${r} min`;
+  if (lang === 'en') return h ? `${h} h${r ? '\u00a0' + String(r).padStart(2, '0') : ''}` : `${r} min`;
+  return h ? `${h} h${r ? '\u00a0' + String(r).padStart(2, '0') : ''}` : `${r} min`;
 };
 
 // Prochaine occurrence d'un événement annuel et état de l'édition de l'année en cours

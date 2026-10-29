@@ -1,10 +1,10 @@
-import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine } from './core.js?v=20261028-2';
-import { nextSunEvent, cassisTime } from './sun.js?v=20261028-2';
-import { cinema } from './cinema.js?v=20261028-2';
+import { initCore, startReveals, gsap, ScrollTrigger, calm, isDesktop, splitWords, fine, lockScroll } from './core.js';
+import { nextSunEvent, cassisTime } from './sun.js';
+import { cinema } from './cinema.js';
 import { createChart } from './chart.js';
-import { createFireworks } from './fireworks.js?v=20261028-2';
-import { getLang, d, onLang } from './i18n.js?v=20261028-2';
-import { PALIERS } from './data.js?v=20261028-2';
+import { createFireworks } from './fireworks.js';
+import { getLang, d, onLang } from './i18n.js';
+import { PALIERS } from './data.js';
 
 const root = document.documentElement;
 let seen = false;
@@ -53,11 +53,37 @@ setInterval(renderSun, 60000);
 
 /* ---------- Ouverture : lever du jour, le mot TIKI, plongée dans la vidéo ---------- */
 const intro = document.querySelector('.intro');
+const navEntry = performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+const backForward = !!navEntry && navEntry.type === 'back_forward';
+let finished = false;
 const finish = () => {
+  if (finished) return;
+  finished = true;
   root.classList.add('is-ready');
+  lockScroll(false);
+  try { history.scrollRestoration = 'auto'; } catch (e) { /* indisponible */ }
   if (intro) intro.remove();
   try { sessionStorage.setItem('tiki-intro', '1'); } catch (e) { /* stockage indisponible */ }
 };
+
+// Fût du « I » mesuré dans la police : épaisseur et centre réel de l'encre (hors espacement des lettres)
+function stemMetrics() {
+  const fallback = { ratio: 0.08, center: null };
+  try {
+    const c = document.createElement('canvas');
+    c.width = 400; c.height = 480;
+    const x = c.getContext('2d');
+    x.font = '400 400px "Instrument Serif"';
+    x.fillText('I', 120, 420);
+    const row = x.getImageData(0, 280, 400, 1).data;
+    let run = 0, best = 0, end = 0;
+    for (let i = 3, px = 0; i < row.length; i += 4, px += 1) {
+      if (row[i] > 120) { run += 1; if (run > best) { best = run; end = px; } } else run = 0;
+    }
+    if (best <= 4) return fallback;
+    return { ratio: best / 400, center: (end - best / 2 + 0.5 - 120) / 400 };
+  } catch (e) { return fallback; }
+}
 
 function layoutWord() {
   const W = window.innerWidth, H = window.innerHeight;
@@ -65,30 +91,39 @@ function layoutWord() {
   texts.forEach((t) => { t.setAttribute('font-size', '100'); t.setAttribute('x', W / 2); t.setAttribute('y', H / 2); });
   const len = texts[0].getComputedTextLength() || 220;
   const fs = Math.min((W * (W > 900 ? 0.62 : 0.84)) / len * 100, H * 0.62);
-  texts.forEach((t) => { t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('y', (H / 2 + fs * 0.34).toFixed(1)); });
-  // Point de plongée : le centre du premier « I »
-  let ox = W / 2, oy = H / 2, ext = fs * 0.3;
-  try { const r = texts[0].getExtentOfChar(1); ox = r.x + r.width / 2; oy = r.y + r.height * 0.55; ext = r.width; } catch (e) { /* mesure indisponible */ }
-  const stem = Math.max(6, ext * 0.34);
-  const reach = 2 * Math.max(ox, W - ox, oy, H - oy);
-  return { ox, oy, scale: (reach / stem) * 1.25, fs };
+  const baseline = H / 2 + fs * 0.34;
+  texts.forEach((t) => { t.setAttribute('font-size', fs.toFixed(1)); t.setAttribute('y', baseline.toFixed(1)); });
+  const stem = stemMetrics();
+  let ox = W / 2;
+  try {
+    const r = texts[0].getExtentOfChar(1);
+    ox = stem.center !== null ? r.x + stem.center * fs : r.x + r.width / 2;
+  } catch (e) { /* mesure indisponible */ }
+  const oy = baseline - fs * 0.33;
+  const halfStem = (stem.ratio * fs) / 2;
+  const scale = (Math.max(ox, W - ox) / halfStem) * 1.6;
+  return { ox, oy, scale, fs };
 }
 
-if (calm) {
+if (calm || backForward) {
   finish();
+  if (!calm) cinema(hero.querySelector('.hero__media'));
 } else {
+  try { history.scrollRestoration = 'manual'; } catch (e) { /* indisponible */ }
+  window.scrollTo(0, 0);
+  lockScroll(true);
   const title = hero.querySelector('[data-hero-title]');
   const split = splitWords(title);
   const fades = hero.querySelectorAll('[data-hero-fade]');
   const stage = intro.querySelector('.intro__stage');
   const line = intro.querySelector('.intro__line');
   const sun = intro.querySelector('.intro__sun');
+  const logo = intro.querySelector('.intro__logo');
   const words = intro.querySelectorAll('.intro__word');
   const holeText = intro.querySelector('mask .intro__text');
   const stroke = intro.querySelector('.intro__text--stroke');
   const night = intro.querySelector('.intro__night');
   const timeEl = intro.querySelector('.intro__time');
-  const L = line.getTotalLength();
   const clock = { m: 6 * 60 + 58 };
 
   const run = () => {
@@ -96,48 +131,38 @@ if (calm) {
     const dash = g.fs * 14;
     gsap.set(words, { svgOrigin: `${g.ox} ${g.oy}`, scale: 1 });
     gsap.set(stroke, { strokeDasharray: `${dash} ${dash}`, strokeDashoffset: dash });
-    gsap.set(line, { strokeDasharray: L, strokeDashoffset: seen ? 0 : L });
-    const tl = gsap.timeline({ onComplete: finish });
+    const tl = gsap.timeline();
     if (!seen) {
-      // Lever du jour court (0,8 s), puis le mot TIKI
-      tl.to(line, { strokeDashoffset: 0, duration: 0.5, ease: 'power2.inOut' })
-        .from(sun, { attr: { cy: 320 }, duration: 0.6, ease: 'power2.out' }, 0.1)
-        .from(intro.querySelector('.intro__logo'), { opacity: 0, y: 16, duration: 0.35, ease: 'power2.out' }, 0.25)
-        .to(clock, { m: 9 * 60, duration: 0.6, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.1)
-        .to(stage, { opacity: 0, y: -12, duration: 0.25, ease: 'power2.in' }, 0.7)
-        .add('word', 0.8)
-        .fromTo(holeText, { attr: { 'fill-opacity': 0 } }, { attr: { 'fill-opacity': 1 }, duration: 0.4, ease: 'power1.out' }, 'word')
-        .fromTo(words, { scale: 0.9 }, { scale: 1, duration: 0.55, ease: 'power2.out' }, 'word')
-        .fromTo(stroke, { opacity: 1, strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 0.55, ease: 'power2.inOut' }, 'word')
-        .add('zoom', 'word+=0.5');
+      tl.to(line, { strokeDashoffset: 0, duration: 0.65, ease: 'power2.inOut' })
+        .to(sun, { attr: { cy: 250 }, duration: 0.85, ease: 'power2.out' }, 0.12)
+        .fromTo(logo, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.35)
+        .to(clock, { m: 9 * 60, duration: 0.9, ease: 'power1.inOut', onUpdate: () => { const m = Math.round(clock.m); timeEl.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`; } }, 0.12)
+        .to(stage, { opacity: 0, y: -12, duration: 0.26, ease: 'power2.in' }, 0.98)
+        .add('word', 1.22)
+        .fromTo(holeText, { attr: { 'fill-opacity': 0 } }, { attr: { 'fill-opacity': 1 }, duration: 0.45, ease: 'power1.out' }, 'word')
+        .fromTo(words, { scale: 0.92 }, { scale: 1, duration: 0.7, ease: 'power2.out' }, 'word')
+        .fromTo(stroke, { opacity: 1, strokeDashoffset: dash }, { strokeDashoffset: 0, duration: 0.7, ease: 'power2.inOut' }, 'word')
+        .add('zoom', 'word+=0.62');
     } else {
-      gsap.set(stage, { opacity: 0 });
       gsap.set(holeText, { attr: { 'fill-opacity': 1 } });
       gsap.set(stroke, { opacity: 1, strokeDashoffset: 0 });
-      tl.add('zoom', 0.3);
+      tl.add('zoom', 0.32);
     }
-    tl.to(stroke, { opacity: 0, duration: 0.2, ease: 'power1.in' }, 'zoom')
-      .to(words, { scale: g.scale, duration: 0.8, ease: 'expo.in' }, 'zoom')
-      .to(night, { opacity: 0, duration: 0.25, ease: 'none' }, 'zoom+=0.58')
-      .add('reveal', 'zoom+=0.6');
-    cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.5 });
-    if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 0.8, ease: 'expo.out', stagger: 0.04 }, 'reveal+=0.05');
-    tl.from(fades, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.06 }, 'reveal+=0.2');
-    introTl = tl;
-    if (skipped) tl.progress(1);
+    tl.to(stroke, { opacity: 0, duration: 0.22, ease: 'power1.in' }, 'zoom')
+      .to(words, { scale: g.scale, duration: 1.05, ease: 'expo.in' }, 'zoom')
+      .to(night, { opacity: 0, duration: 0.06, ease: 'none' }, 'zoom+=1.0')
+      .add('reveal', 'zoom+=1.0')
+      .call(finish, null, 'reveal+=0.08');
+    cinema(hero.querySelector('.hero__media'), { timeline: tl, at: tl.labels.reveal - 0.45 });
+    if (split) tl.from(split.words, { yPercent: 115, rotate: 3, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'reveal+=0.02');
+    tl.from(fades, { y: 30, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.08 }, 'reveal+=0.25');
   };
-  // Un clic, une touche ou la molette passe l'ouverture
-  let introTl = null, skipped = false;
-  const skip = () => {
-    if (skipped) return;
-    skipped = true;
-    ['pointerdown', 'keydown', 'wheel'].forEach((t) => window.removeEventListener(t, skip));
-    if (introTl) introTl.progress(1);
-  };
-  ['pointerdown', 'keydown', 'wheel'].forEach((t) => window.addEventListener(t, skip, { passive: true }));
   const fontReady = document.fonts && document.fonts.load ? document.fonts.load('400 100px "Instrument Serif"') : Promise.resolve();
   Promise.race([fontReady, new Promise((r) => setTimeout(r, 700))]).then(run, run);
+  setTimeout(finish, 6000);
+}
 
+if (!calm) {
   // Profondeur : la vidéo et le titre glissent en sens opposé sous la souris
   const inner = hero.querySelector('.hero__inner');
   if (fine) {
@@ -173,7 +198,7 @@ const steps = [...document.querySelectorAll('[data-steps] .step')];
 const P = [{ n: 0, min: 0 }, ...PALIERS.map((p) => ({ n: p.n, min: p.minutes }))];
 let active = 0;
 
-const clockFmt = (m) => `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}`;
+const clockFmt = (m) => `${Math.floor(m / 60)}\u00a0h\u00a0${String(m % 60).padStart(2, '0')}`;
 function westCount() { return chart.svg.querySelectorAll('.chart__mk.is-on:not(.is-east)').length; }
 
 // p de 0 à 5 : de 0 à 4 les paliers ouest, de 4 à 5 l'autre cap
@@ -190,15 +215,31 @@ function setProgress(p) {
     const f = Math.min(1, (p - 4) / 0.7);
     chart.render({ west: 1, east: f, label: f > 0.05 ? '6 h' : '3 h', count: f > 0.05 ? (lang === 'en' ? 'the other way' : 'l’autre cap') : d('calanques')(9) });
   }
-  const k = Math.min(4, Math.floor(p));
-  if (k !== active && isDesktop() && !calm) {
-    const from = steps[active], to = steps[k];
-    gsap.to(from, { autoAlpha: 0, y: -24, duration: 0.45, ease: 'power2.in' });
-    gsap.fromTo(to, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'expo.out', delay: 0.15 });
-    gsap.fromTo(to.querySelector('.step__media'), { clipPath: 'inset(0 0 100% 0 round 18px)' }, { clipPath: 'inset(0 0 0% 0 round 18px)', duration: 1, ease: 'expo.out', delay: 0.15 });
-    from.classList.remove('is-active'); to.classList.add('is-active');
+  active = Math.min(4, Math.floor(p));
+  showStep(active);
+}
+
+// Une seule étape visible à la fois, même en défilement rapide ou en marche arrière
+const media = steps.map((s) => s.querySelector('.step__media'));
+let shown = 0;
+function showStep(k, instant = false) {
+  if (!isDesktop() || calm) { shown = k; return; }
+  if (k === shown && !instant) return;
+  const prev = shown;
+  shown = k;
+  gsap.killTweensOf(steps);
+  gsap.killTweensOf(media);
+  steps.forEach((s, i) => s.classList.toggle('is-active', i === k));
+  if (instant || prev < 0) {
+    steps.forEach((s, i) => gsap.set(s, { autoAlpha: i === k ? 1 : 0, y: 0 }));
+    gsap.set(media, { clipPath: 'inset(0% 0% 0% 0% round 18px)' });
+    return;
   }
-  active = k;
+  const dir = k > prev ? 1 : -1;
+  steps.forEach((s, i) => { if (i !== k && i !== prev) gsap.set(s, { autoAlpha: 0, y: 0 }); });
+  gsap.to(steps[prev], { autoAlpha: 0, y: -24 * dir, duration: 0.32, ease: 'power2.in' });
+  gsap.fromTo(steps[k], { autoAlpha: 0, y: 34 * dir }, { autoAlpha: 1, y: 0, duration: 0.75, ease: 'expo.out', delay: 0.08 });
+  gsap.fromTo(media[k], { clipPath: dir > 0 ? 'inset(0% 0% 100% 0% round 18px)' : 'inset(100% 0% 0% 0% round 18px)' }, { clipPath: 'inset(0% 0% 0% 0% round 18px)', duration: 0.9, ease: 'expo.out', delay: 0.08 });
 }
 
 if (calm) {
@@ -208,20 +249,21 @@ if (calm) {
 } else {
   setProgress(0);
   const state = { p: 0 };
+  let mobileTween = null;
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
-    // La carte garde ses proportions dans la place réelle laissée sous le titre
-    const parcours = document.querySelector('.parcours'), stepsEl = document.querySelector('[data-steps]');
-    const fitChart = () => parcours.style.setProperty('--carte-h', `${stepsEl.clientHeight}px`);
-    fitChart();
-    const ro = window.ResizeObserver ? new ResizeObserver(fitChart) : null;
-    if (ro) ro.observe(stepsEl);
-    steps.forEach((s, i) => gsap.set(s, { autoAlpha: i === active ? 1 : 0, y: 0 }));
+    shown = -1;
+    showStep(active, true);
     const st = ScrollTrigger.create({
-      trigger: '.parcours', start: 'top top', end: '+=300%', pin: true, pinType: 'transform', scrub: true,
+      trigger: '.parcours', start: 'top top', end: '+=300%', pin: true, pinType: 'transform', anticipatePin: 1, scrub: true,
       onUpdate: (s) => setProgress(Math.min(4.99, s.progress * 5.2))
     });
-    return () => { st.kill(); if (ro) ro.disconnect(); parcours.style.removeProperty('--carte-h'); steps.forEach((s) => gsap.set(s, { clearProps: 'all' })); };
+    return () => {
+      st.kill();
+      gsap.killTweensOf(steps); gsap.killTweensOf(media);
+      gsap.set(steps, { clearProps: 'opacity,visibility,transform' });
+      gsap.set(media, { clearProps: 'clipPath' });
+    };
   });
   mm.add('(max-width: 900px)', () => {
     chartHost.style.position = 'sticky';
@@ -229,9 +271,9 @@ if (calm) {
     chartHost.style.zIndex = '2';
     const sts = steps.map((s, i) => ScrollTrigger.create({
       trigger: s, start: 'top 75%', end: 'bottom 40%',
-      onToggle: (self) => { if (self.isActive) gsap.to(state, { p: i + 0.99, duration: 1.4, ease: 'power2.inOut', onUpdate: () => setProgress(state.p) }); }
+      onToggle: (self) => { if (self.isActive) { if (mobileTween) mobileTween.kill(); mobileTween = gsap.to(state, { p: i + 0.99, duration: 1.4, ease: 'power2.inOut', onUpdate: () => setProgress(state.p) }); } }
     }));
-    return () => { sts.forEach((x) => x.kill()); chartHost.removeAttribute('style'); };
+    return () => { if (mobileTween) mobileTween.kill(); sts.forEach((x) => x.kill()); chartHost.removeAttribute('style'); };
   });
 }
 onLang(() => setProgress(Math.max(0, active) + 0.99));

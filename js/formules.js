@@ -1,10 +1,10 @@
-import { initCore, startReveals, gsap, calm } from './core.js?v=20261028-2';
-import { pageHero } from './page-hero.js?v=20261028-2';
+import { initCore, startReveals, gsap, ScrollTrigger, calm } from './core.js';
+import { pageHero } from './page-hero.js';
 import { createChart } from './chart.js';
-import { createFireworks } from './fireworks.js?v=20261028-2';
-import { getLang, d, onLang } from './i18n.js?v=20261028-2';
-import { quote, route, season, fmtEUR, eventStatus, isSummerEvening } from './pricing.js?v=20261028-2';
-import { TARIFS, EVENEMENTS } from './data.js?v=20261028-2';
+import { createFireworks } from './fireworks.js';
+import { getLang, d, onLang } from './i18n.js';
+import { quote, route, season, fmtEUR, eventStatus, isSummerEvening } from './pricing.js';
+import { TARIFS, EVENEMENTS } from './data.js';
 
 initCore();
 pageHero();
@@ -15,7 +15,7 @@ function renderBars() {
   const max = TARIFS.haute[8];
   document.querySelectorAll('[data-bars]').forEach((box) => {
     const t = TARIFS[box.dataset.bars];
-    box.innerHTML = Object.entries(t).map(([h, p]) => `<div class="bar"><span>${h} h</span><span class="bar__track"><span class="bar__fill" style="--w:${((p / max) * 100).toFixed(1)}%"></span></span><b>${fmtEUR(p, lang)}</b></div>`).join('');
+    box.innerHTML = Object.entries(t).map(([h, p]) => `<div class="bar"><span>${h}\u00a0h</span><span class="bar__track"><span class="bar__fill" style="--w:${((p / max) * 100).toFixed(1)}%"></span></span><b>${fmtEUR(p, lang)}</b></div>`).join('');
   });
 }
 renderBars();
@@ -82,12 +82,12 @@ function update(animate = true) {
   if (+range.min !== mn || +range.max !== mx || !ticks.children.length) {
     range.min = mn; range.max = mx;
     range.value = Math.min(mx, Math.max(mn, +range.value));
-    ticks.innerHTML = Array.from({ length: mx - mn + 1 }, (_, i) => `<span>${mn + i} h</span>`).join('');
+    ticks.innerHTML = Array.from({ length: mx - mn + 1 }, (_, i) => `<span>${mn + i}\u00a0h</span>`).join('');
   }
   const h = c.moment === 'soiree' && c.formule === 'partagee' ? 2 : +range.value;
   c.heures = c.moment === 'evenement' ? null : h;
   range.style.setProperty('--fill', `${((h - mn) / Math.max(1, mx - mn)) * 100}%`);
-  outDuree.textContent = `${h} h`;
+  outDuree.textContent = `${h}\u00a0h`;
 
   const q = quote(c);
   form.querySelectorAll('[data-season], [data-season-2]').forEach((s) => {
@@ -108,8 +108,8 @@ function update(animate = true) {
     } else { totalObj.v = q.total; totalEl.textContent = fmtEUR(q.total, lang); }
   }
   const lines = [];
-  if (c.moment === 'jour') lines.push([`${d('boatPrice')} · ${h} h · ${q.season.key === 'haute' ? d('high') : d('low')}`, fmtEUR(q.base, lang)]);
-  if (c.moment === 'soiree' && c.formule === 'privee') lines.push([`${d('boatPrice')} · ${h} h`, fmtEUR(q.base, lang)]);
+  if (c.moment === 'jour') lines.push([`${d('boatPrice')} · ${h}\u00a0h · ${q.season.key === 'haute' ? d('high') : d('low')}`, fmtEUR(q.base, lang)]);
+  if (c.moment === 'soiree' && c.formule === 'privee') lines.push([`${d('boatPrice')} · ${h}\u00a0h`, fmtEUR(q.base, lang)]);
   if (c.moment === 'soiree' && c.formule === 'partagee') lines.push([d('perPerson')(c.personnes, fmtEUR(TARIFS.soireePartagee.parPersonne, lang)), fmtEUR(q.base, lang)]);
   if (c.moment === 'evenement') lines.push([d('evtLabel')(EVENEMENTS.find((e) => iso(eventStatus(e, today).next) === evtSel.value) || EVENEMENTS[0], c.date.getFullYear()), d('onRequest')]);
   if (c.barbecue) lines.push([d('bbq'), `+ ${fmtEUR(TARIFS.barbecue, lang)}`]);
@@ -124,7 +124,7 @@ function update(animate = true) {
   warnEl.innerHTML = warns.join('<br>');
 
   // programme et carte
-  const f = (m) => { const hh = Math.floor(m / 60), r = m % 60; return hh ? `${hh} h${r ? ' ' + String(r).padStart(2, '0') : ''}` : `${r} min`; };
+  const f = (m) => { const hh = Math.floor(m / 60), r = m % 60; return hh ? `${hh} h${r ? '\u00a0' + String(r).padStart(2, '0') : ''}` : `${r} min`; };
   let prog = '', n = 3, east = 0;
   if (c.moment === 'jour') {
     const r = route(h * 60);
@@ -140,7 +140,7 @@ function update(animate = true) {
   }
   progEl.textContent = prog;
   const target = { west: chart.westFor(n), east };
-  const label = c.heures ? `${c.heures} h` : '—';
+  const label = c.heures ? `${c.heures}\u00a0h` : '—';
   const count = d('calanques')(n);
   if (animate && !calm) gsap.to(shown, { ...target, duration: 1.1, ease: 'power2.inOut', overwrite: true, onUpdate: () => chart.render({ ...shown, label, count }) });
   else { Object.assign(shown, target); chart.render({ ...shown, label, count }); }
@@ -165,6 +165,25 @@ form.addEventListener('submit', (e) => {
 });
 onLang(() => { fillEvents(); update(false); });
 update(false);
+
+/* ---------- Bon à savoir : ouverture et fermeture en douceur ---------- */
+document.querySelectorAll('.faq details').forEach((dt) => {
+  const sum = dt.querySelector('summary'), body = dt.querySelector('.faq__body');
+  if (!sum || !body) return;
+  sum.addEventListener('click', (e) => {
+    if (calm) return;
+    e.preventDefault();
+    gsap.killTweensOf(body);
+    body.style.overflow = 'hidden';
+    const done = () => { gsap.set(body, { clearProps: 'height,opacity,paddingBottom,overflow' }); ScrollTrigger.refresh(); };
+    if (dt.open) {
+      gsap.to(body, { height: 0, opacity: 0, paddingBottom: 0, duration: 0.38, ease: 'power2.inOut', onComplete: () => { dt.open = false; done(); } });
+    } else {
+      dt.open = true;
+      gsap.fromTo(body, { height: 0, opacity: 0, paddingBottom: 0 }, { height: 'auto', opacity: 1, paddingBottom: 22, duration: 0.5, ease: 'power3.out', onComplete: done });
+    }
+  });
+});
 
 document.querySelectorAll('[data-fireworks]').forEach((cv) => createFireworks(cv, { calm }));
 startReveals();

@@ -1,10 +1,10 @@
 // Socle commun : défilement fluide, horloge de bord et ciel, curseur, transitions,
 // révélations, langue, son et mode calme.
-import { apply, setLang, getLang, d, onLang } from './i18n.js?v=20261028-2';
-import { toggleSea, setSpeed } from './sea-sound.js?v=20261028-2';
+import { apply, setLang, getLang, d, onLang } from './i18n.js';
+import { toggleSea, setSpeed } from './sea-sound.js';
 import { Lenis } from '../vendor/lenis/lenis.js';
-import { EVENEMENTS } from './data.js?v=20261028-2';
-import { eventStatus, isSummerEvening } from './pricing.js?v=20261028-2';
+import { EVENEMENTS } from './data.js';
+import { eventStatus, isSummerEvening } from './pricing.js';
 
 export const gsap = window.gsap;
 export const ScrollTrigger = window.ScrollTrigger;
@@ -61,6 +61,30 @@ function measure() {
   marks.forEach((m, i) => { if (m.t1 === null) m.t1 = marks[i + 1] ? marks[i + 1].t0 : m.t0 + 0.6; });
 }
 
+// L'horloge s'efface quand elle passerait sur du texte à lire (bureau uniquement, où elle est en bas à gauche)
+const wide = window.matchMedia('(min-width: 901px)');
+const TEXTY = 'p, li, h1, h2, h3, h4, blockquote, figcaption, summary, label, input, textarea, select, button, a, dt, dd, td, th, span, small, address, time';
+let overlapAt = 0, overlapping = false, overlapTimer = 0;
+function clockOverText() {
+  if (!clockEl || !wide.matches) return false;
+  const now = performance.now();
+  clearTimeout(overlapTimer);
+  if (now - overlapAt < 140) {
+    overlapTimer = setTimeout(updateSky, 160);
+    return overlapping;
+  }
+  overlapAt = now;
+  const r = clockEl.getBoundingClientRect();
+  const y0 = r.top + r.height / 2 - (clockEl.classList.contains('is-away') ? 14 : 0);
+  const pts = [[r.left + 6, y0], [r.left + r.width / 2, y0], [r.right - 6, y0], [r.left + r.width / 2, r.top + 4], [r.left + r.width / 2, r.bottom - 4]];
+  overlapping = pts.some(([x, y]) => {
+    const el = document.elementsFromPoint(x, y).find((e) => !clockEl.contains(e));
+    const t = el && el.closest(TEXTY);
+    return !!(t && !t.closest('.hdr, .menu') && (t.textContent.trim() || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)));
+  });
+  return overlapping;
+}
+
 function updateSky() {
   if (!marks.length) return;
   const ref = window.scrollY + window.innerHeight * 0.32;
@@ -93,7 +117,7 @@ function updateSky() {
     clockEl.classList.toggle('is-dark', h > 20.2);
   }
   const dark = h > 20.2;
-  if (clockEl) clockEl.classList.toggle('is-away', !!heroEl && window.scrollY < window.innerHeight * 0.55);
+  if (clockEl) clockEl.classList.toggle('is-away', (!!heroEl && window.scrollY < window.innerHeight * 0.55) || clockOverText());
   root.style.setProperty('--cursor', dark ? '#F4F1EA' : '#13233A');
   if (hdr) hdr.classList.toggle('is-dark', dark);
 }
@@ -136,7 +160,8 @@ function initHeader() {
       menu.classList.toggle('is-open', open);
       burger.setAttribute('aria-expanded', String(open));
       hdr.classList.toggle('is-menu', open);
-      hdr.style.color = open ? 'var(--calcaire)' : '';
+      if (open) hdr.classList.remove('is-hidden');
+      if (open && !calm) gsap.fromTo(menu.querySelectorAll('nav a, .menu__tools, .menu__contact'), { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06, delay: 0.18 });
       if (lenis) open ? lenis.stop() : lenis.start();
       document.body.style.overflow = open ? 'hidden' : '';
     };
@@ -144,32 +169,6 @@ function initHeader() {
     menu.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
   }
-}
-
-/* ---------- Hauteurs réelles des barres fixes (sections épinglées, dernier bloc) ---------- */
-function initBars() {
-  const bar = document.querySelector('.actionbar');
-  const set = () => {
-    if (hdr) root.style.setProperty('--entete-h', `${Math.round(hdr.offsetTop + hdr.offsetHeight)}px`);
-    root.style.setProperty('--barres-h', `${bar ? bar.offsetHeight : 0}px`);
-  };
-  set();
-  if (window.ResizeObserver) { const ro = new ResizeObserver(set); if (hdr) ro.observe(hdr); if (bar) ro.observe(bar); }
-  window.addEventListener('resize', set);
-  // La barre du bas n'apparaît qu'après le premier écran, et s'efface sur le formulaire et le pied de page
-  if (!bar) return;
-  const inView = new Set();
-  const update = () => bar.classList.toggle('is-away', window.scrollY < window.innerHeight * 0.9 || inView.size > 0);
-  if (window.IntersectionObserver) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); });
-      update();
-    });
-    document.querySelectorAll('main form, .foot').forEach((el) => io.observe(el));
-  }
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update);
-  update();
 }
 
 /* ---------- Curseur hublot et boutons magnétiques ---------- */
@@ -182,8 +181,9 @@ function initCursor() {
   const xr = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' }), yr = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
   const xl = gsap.quickTo(lab, 'x', { duration: 0.45, ease: 'power3' }), yl = gsap.quickTo(lab, 'y', { duration: 0.45, ease: 'power3' });
   const rot = gsap.quickTo(ring, 'rotation', { duration: 0.6, ease: 'power2' });
-  let px = 0;
+  let px = 0, first = true;
   window.addEventListener('pointermove', (e) => {
+    if (first) { first = false; gsap.set([ring, lab], { x: e.clientX, y: e.clientY }); cur.classList.add('is-on'); }
     gsap.set(dot, { x: e.clientX, y: e.clientY });
     xr(e.clientX); yr(e.clientY); xl(e.clientX); yl(e.clientY);
     rot(clamp((e.clientX - px) * 2, -35, 35));
@@ -194,8 +194,8 @@ function initCursor() {
     cur.classList.toggle('is-hover', !!t);
     lab.textContent = t && t.dataset.cursor ? t.dataset.cursor : '';
   });
-  document.addEventListener('pointerleave', () => gsap.to(cur, { opacity: 0, duration: 0.2 }));
-  document.addEventListener('pointerenter', () => gsap.to(cur, { opacity: 1, duration: 0.2 }));
+  document.documentElement.addEventListener('pointerleave', () => cur.classList.remove('is-on'));
+  document.documentElement.addEventListener('pointerenter', () => { if (!first) cur.classList.add('is-on'); });
 }
 
 function initMagnetic() {
@@ -223,10 +223,11 @@ const VEIL = {
 };
 function veilIn(skip) {
   const veil = document.querySelector('.veil');
-  if (!veil || calm || skip) { if (veil) veil.style.visibility = 'hidden'; return; }
+  if (!veil || calm || skip) { if (veil) veil.style.visibility = 'hidden'; root.classList.remove('veil-pending'); return; }
   const path = veil.querySelector('path');
   path.setAttribute('d', VEIL.fullTop);
   veil.style.visibility = 'visible';
+  root.classList.remove('veil-pending');
   gsap.timeline({ onComplete: () => { veil.style.visibility = 'hidden'; } })
     .to(path, { attr: { d: VEIL.leaving }, duration: 0.45, ease: 'power2.in', delay: 0.05 })
     .to(path, { attr: { d: VEIL.gone }, duration: 0.4, ease: 'power2.out' });
@@ -240,14 +241,19 @@ function initLinks() {
     if (a.dataset.prefill) { try { localStorage.setItem('tiki-prefill', JSON.stringify({ type: a.dataset.prefill })); } catch (err) { /* stockage indisponible */ } }
     if (href.startsWith('#')) {
       const target = document.querySelector(href);
-      if (target && lenis) { e.preventDefault(); lenis.scrollTo(target, { offset: -70, duration: 1.4 }); }
+      if (target && lenis) { e.preventDefault(); lenis.scrollTo(target, { duration: 1.4 }); }
       return;
     }
     if (!/\.html(#.*)?$/.test(href) || /^[a-z]+:/i.test(href)) return;
     const samePage = href.split('#')[0] === location.pathname.split('/').pop() || (href.startsWith('index.html') && /\/$|index\.html$/.test(location.pathname));
     if (samePage && href.includes('#')) {
       const target = document.querySelector('#' + href.split('#')[1]);
-      if (target) { e.preventDefault(); lenis ? lenis.scrollTo(target, { offset: -70, duration: 1.4 }) : target.scrollIntoView(); return; }
+      if (target) { e.preventDefault(); lenis ? lenis.scrollTo(target, { duration: 1.4 }) : target.scrollIntoView(); return; }
+    }
+    if (samePage && !href.includes('#')) {
+      e.preventDefault();
+      lenis ? lenis.scrollTo(0, { duration: 1.4 }) : window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+      return;
     }
     if (calm) return;
     e.preventDefault();
@@ -498,32 +504,24 @@ export function initHublot() {
 /* ---------- Galerie horizontale ---------- */
 export function initTrack() {
   const track = document.querySelector('[data-track]');
-  if (!track) return;
-  // Hauteur des photos : la place réelle de la piste, moins la légende et le décalage
-  const fit = () => {
-    if (!isDesktop()) { track.style.removeProperty('--shot-h'); return; }
-    const cs = getComputedStyle(track);
-    const room = track.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    const cap = Math.max(0, ...[...track.querySelectorAll('.shot figcaption')].map((c) => c.offsetHeight));
-    const shots = track.querySelectorAll('.shot');
-    const gap = shots[0] ? parseFloat(getComputedStyle(shots[0]).rowGap) || 0 : 0;
-    const off = shots[1] ? parseFloat(getComputedStyle(shots[1]).marginTop) || 0 : 0;
-    track.style.setProperty('--shot-h', `${Math.round(Math.min(640, Math.max(120, room - cap - gap - off)))}px`);
-  };
-  fit();
-  if (window.ResizeObserver) new ResizeObserver(fit).observe(track.closest('section'));
-  if (ScrollTrigger) ScrollTrigger.addEventListener('refreshInit', fit);
-  if (calm) return;
+  if (!track || calm) return;
   const imgs = track.querySelectorAll('.shot__img img');
   const mm = gsap.matchMedia();
   mm.add('(min-width: 901px)', () => {
     const dist = () => track.scrollWidth - window.innerWidth;
-    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, pinType: 'transform', scrub: 0.6, invalidateOnRefresh: true } });
-    const skew = gsap.quickTo(imgs, 'skewX', { duration: 0.5, ease: 'power3' });
-    const tick = () => { if (lenis) skew(clamp(lenis.velocity * 0.25, -8, 8)); };
+    gsap.to(track, { x: () => -dist(), ease: 'none', scrollTrigger: { trigger: track.closest('section'), start: 'top top', end: () => `+=${dist()}`, pin: true, pinType: 'transform', anticipatePin: 1, scrub: 0.6, invalidateOnRefresh: true } });
+    gsap.set(imgs, { scale: 1.12 });
+    const skew = gsap.quickTo(imgs, 'skewX', { duration: 0.6, ease: 'power3' });
+    const tick = () => { if (lenis) skew(clamp(lenis.velocity * 0.12, -4, 4)); };
     gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+    return () => { gsap.ticker.remove(tick); gsap.set(imgs, { clearProps: 'transform' }); };
   });
+}
+
+/* ---------- Verrou de défilement (ouverture) ---------- */
+export function lockScroll(on) {
+  root.classList.toggle('is-locked', on);
+  if (lenis) on ? lenis.stop() : lenis.start();
 }
 
 /* ---------- Démarrage ---------- */
@@ -537,7 +535,6 @@ export function initCore({ veil = true, keepIntro = false } = {}) {
   }
   drawStars();
   initHeader();
-  initBars();
   initCursor();
   initMagnetic();
   initLinks();
@@ -547,7 +544,13 @@ export function initCore({ veil = true, keepIntro = false } = {}) {
   measure();
   updateSky();
   let ticking = false;
-  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; updateSky(); }); } }, { passive: true });
+  let settle = 0;
+  window.addEventListener('scroll', () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; updateSky(); }); }
+    // une fois les révélations terminées, on revérifie ce qui passe sous l'horloge
+    clearTimeout(settle);
+    settle = setTimeout(() => { overlapAt = 0; updateSky(); }, 1100);
+  }, { passive: true });
   window.addEventListener('resize', () => { drawStars(); measure(); updateSky(); });
   if (ScrollTrigger) ScrollTrigger.addEventListener('refresh', () => { measure(); updateSky(); });
   if (veil) veilIn(false);

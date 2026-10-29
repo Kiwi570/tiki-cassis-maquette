@@ -1,8 +1,8 @@
-import { initCore, startReveals, gsap, calm, lenis } from './core.js?v=20261028-2';
-import { pageHero } from './page-hero.js?v=20261028-2';
-import { getLang, d, onLang } from './i18n.js?v=20261028-2';
-import { quote, fmtEUR, isSummerEvening } from './pricing.js?v=20261028-2';
-import { HEURES_DEPART, TARIFS } from './data.js?v=20261028-2';
+import { initCore, startReveals, gsap, calm, lenis } from './core.js';
+import { pageHero } from './page-hero.js';
+import { getLang, d, onLang } from './i18n.js';
+import { quote, fmtEUR, isSummerEvening } from './pricing.js';
+import { HEURES_DEPART, TARIFS } from './data.js';
 
 initCore();
 pageHero();
@@ -29,7 +29,7 @@ const type = () => form.type.value;
 function fillDuree() {
   const t = type(), keep = duree.value;
   const opts = t === 'jour' ? [1, 2, 3, 4, 5, 6, 7, 8] : t === 'soiree' ? [2, 3] : t === 'partagee' ? [2] : [];
-  duree.innerHTML = opts.length ? opts.map((h) => `<option value="${h}">${h} h</option>`).join('') : `<option value="">${d('toDefine')}</option>`;
+  duree.innerHTML = opts.length ? opts.map((h) => `<option value="${h}">${h}\u00a0h</option>`).join('') : `<option value="">${d('toDefine')}</option>`;
   if ([...duree.options].some((o) => o.value === keep)) duree.value = keep;
   else if (t === 'jour') duree.value = '3';
   duree.disabled = opts.length < 2;
@@ -80,7 +80,7 @@ function updateRecap() {
     [d('rType'), d('type')[c.t]],
     [d('rDate'), fmtDate(c.date)],
     [d('rHeure'), c.moment === 'info' ? d('toDefine') : heure.value],
-    [d('rDuree'), c.heures ? `${c.heures} h` : d('toDefine')],
+    [d('rDuree'), c.heures ? `${c.heures}\u00a0h` : d('toDefine')],
     [d('rPers'), String(c.personnes)]
   ];
   if (q) rows.push([d('rSaison'), q.season.key === 'haute' ? d('high') : d('low')]);
@@ -129,7 +129,9 @@ function validate(i) {
   return ok;
 }
 
+let busy = false;
 function go(i) {
+  if (i < 0 || i >= panes.length || i === step) return;
   const from = panes[step], to = panes[i];
   const dir = i > step ? 1 : -1;
   step = i;
@@ -137,16 +139,19 @@ function go(i) {
   btnPrev.hidden = i === 0;
   btnNext.hidden = i === panes.length - 1;
   btnSend.hidden = i !== panes.length - 1;
-  if (calm) { from.hidden = true; to.hidden = false; to.querySelector('input, select, textarea')?.focus(); return; }
-  gsap.to(from, { x: -40 * dir, opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: () => {
-    from.hidden = true; gsap.set(from, { clearProps: 'all' });
+  const focusFirst = () => to.querySelector('input:not([type="radio"]), select, textarea, input')?.focus({ preventScroll: true });
+  if (calm) { panes.forEach((p) => { p.hidden = p !== to; }); focusFirst(); return; }
+  busy = true;
+  gsap.killTweensOf(panes);
+  gsap.to(from, { x: -40 * dir, opacity: 0, duration: 0.26, ease: 'power2.in', onComplete: () => {
+    panes.forEach((p) => { if (p !== to) { p.hidden = true; gsap.set(p, { clearProps: 'all' }); } });
     to.hidden = false;
-    gsap.fromTo(to, { x: 40 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'expo.out', onComplete: () => to.querySelector('input:not([type="radio"]), select, textarea, input')?.focus({ preventScroll: true }) });
+    gsap.fromTo(to, { x: 40 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: 'expo.out', onComplete: () => { busy = false; focusFirst(); } });
   } });
 }
 
-btnNext.addEventListener('click', () => { if (validate(step)) go(step + 1); });
-btnPrev.addEventListener('click', () => go(step - 1));
+btnNext.addEventListener('click', () => { if (!busy && validate(step)) go(step + 1); });
+btnPrev.addEventListener('click', () => { if (!busy) go(step - 1); });
 form.addEventListener('change', (e) => { if (e.target.name === 'type') fillDuree(); updateRecap(); });
 form.addEventListener('input', updateRecap);
 form.addEventListener('submit', (e) => {
@@ -162,9 +167,12 @@ form.addEventListener('submit', (e) => {
 
 form.querySelector('[data-restart]').addEventListener('click', () => {
   done.hidden = true; navBtns.hidden = false;
-  panes.forEach((p, k) => { p.hidden = k !== 0; });
-  step = 0;
-  go(0);
+  gsap.killTweensOf(panes);
+  panes.forEach((p, k) => { p.hidden = k !== 0; gsap.set(p, { clearProps: 'all' }); });
+  step = 0; busy = false;
+  prog.forEach((li, k) => { li.classList.toggle('is-current', k === 0); li.classList.remove('is-done'); });
+  btnPrev.hidden = true; btnNext.hidden = false; btnSend.hidden = true;
+  panes[0].querySelector('input')?.focus({ preventScroll: true });
 });
 
 form.querySelector('[data-copy-recap]').addEventListener('click', async (e) => {
@@ -183,5 +191,4 @@ form.querySelector('[data-copy-recap]').addEventListener('click', async (e) => {
 
 onLang(() => { fillDuree(); updateRecap(); });
 updateRecap();
-if (location.hash === '#demande') setTimeout(() => { const t = document.getElementById('demande'); if (lenis) lenis.scrollTo(t, { offset: -60, immediate: true }); else t.scrollIntoView(); }, 900);
 startReveals();

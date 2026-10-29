@@ -40,5 +40,5 @@ export function nextSunEvent(now = new Date()) {
 
 export function cassisTime(date, lang = 'fr') {
   const t = new Intl.DateTimeFormat('fr-FR', { timeZone: CASSIS.tz, hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
-  return lang === 'en' ? t : t.replace(':', ' h ');
+  return lang === 'en' ? t : t.replace(':', '\u00a0h\u00a0');
 }
