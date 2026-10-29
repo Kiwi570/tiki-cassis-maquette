@@ -17,7 +17,7 @@
 <link rel="preload" href="fonts/manrope-variable.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 
-<script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-calm')==='1')d.classList.add('calm');if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}try{if(sessionStorage.getItem('tiki-intro')==='1')d.classList.add('intro-seen');}catch(e){}var nv=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(!d.classList.contains('calm')&&d.getAttribute('data-page')==='index'&&nv.type!=='back_forward'){d.classList.add('is-locked');try{history.scrollRestoration='manual';}catch(e){}setTimeout(function(){d.classList.remove('is-locked');},7000);}if(!d.classList.contains('calm')&&d.getAttribute('data-page')!=='index'){d.classList.add('veil-pending');setTimeout(function(){d.classList.remove('veil-pending');},4000);}})();</script>
+<script>(function(){var d=document.documentElement;d.classList.add('js');d.lang='fr';try{if(localStorage.getItem('tiki-lang')==='en')d.lang='en';}catch(e){}try{if(matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('calm');}catch(e){}try{if(sessionStorage.getItem('tiki-intro')==='1')d.classList.add('intro-seen');}catch(e){}var nv=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0])||{};if(!d.classList.contains('calm')&&d.getAttribute('data-page')==='index'&&nv.type!=='back_forward'){d.classList.add('is-locked');try{history.scrollRestoration='manual';}catch(e){}setTimeout(function(){d.classList.remove('is-locked');},7000);}if(!d.classList.contains('calm')&&d.getAttribute('data-page')!=='index'){d.classList.add('veil-pending');setTimeout(function(){d.classList.remove('veil-pending');},4000);}})();</script>
 </head>
 <body>
 <a class="skip" href="#contenu" data-i18n="ui.skip">Aller au contenu</a>
@@ -35,8 +35,6 @@
     </nav>
     <div class="hdr__tools">
       <button class="tool" type="button" data-lang-toggle aria-label="Read in English" data-i18n-attr="aria-label:ui.langlabel"><span data-i18n="ui.lang">EN</span></button>
-      <button class="tool tool--text" type="button" data-sound aria-pressed="false"><span class="wavebars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-i18n="ui.sound">Écouter la mer</span></button>
-      <button class="tool tool--text" type="button" data-calm aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 3 2"/></svg><span data-i18n="ui.calm">Mode calme</span></button>
       <a class="btn btn--sun btn--small magnetic" href="contact.html" data-i18n="ui.book">Réserver</a>
       <button class="burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Ouvrir le menu" data-i18n-attr="aria-label:ui.menu"><span></span><span></span></button>
     </div>
@@ -49,10 +47,6 @@
       <a href="formules.html" data-i18n="nav.formulesEm">Formules <em>&amp; tarifs</em></a>
       <a href="contact.html" data-i18n="nav.contactEm">Contact <em>&amp; réservation</em></a>
     </nav>
-    <div class="menu__tools">
-      <button class="tool" type="button" data-sound aria-pressed="false"><span class="wavebars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-i18n="ui.sound">Écouter la mer</span></button>
-      <button class="tool" type="button" data-calm aria-pressed="false"><span data-i18n="ui.calm">Mode calme</span></button>
-    </div>
     <div class="menu__contact">
       <span class="num">+33 (0)6 68 26 33 45</span>
       <span>calanques@tikicassis.fr</span>
@@ -85,7 +79,7 @@
       <div><h2 data-i18n="ml.h3">Propriété intellectuelle</h2>
         <p data-i18n="ml.p3">Les textes, images, photographies, logos et vidéos du site sont la propriété de l'éditeur, sauf mention contraire. Portrait du capitaine : Thomas Bertini Photography. La vidéo d'ouverture de la page d'accueil est une illustration générée par intelligence artificielle (Grok) : le bateau et le paysage qui y figurent sont des images de synthèse. Toute reproduction sans autorisation écrite préalable est interdite.</p></div>
       <div><h2 data-i18n="ml.h4">Données personnelles et cookies</h2>
-        <p data-i18n="ml.p4">Cette maquette n'envoie aucune donnée et n'utilise pas de cookies de mesure d'audience. Les choix de langue et de mode calme sont gardés dans votre navigateur. <span class="todo">politique de confidentialité du site final à compléter</span></p></div>
+        <p data-i18n="ml.p4">Cette maquette n'envoie aucune donnée et n'utilise pas de cookies de mesure d'audience. Le choix de langue est gardé dans votre navigateur. <span class="todo">politique de confidentialité du site final à compléter</span></p></div>
       <div><h2 data-i18n="ml.h5">Droit applicable</h2>
         <p data-i18n="ml.p5">Le site est soumis au droit français. En cas de litige, et à défaut de résolution amiable, les tribunaux français sont seuls compétents.</p></div>
     </div>

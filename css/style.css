@@ -134,14 +134,7 @@ p { margin: 0; }
 .hdr__tools { display: flex; align-items: center; gap: 8px; }
 .tool { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 12px; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); border-radius: 99px; background: transparent; cursor: pointer; font-size: .82rem; font-weight: 700; letter-spacing: .03em; white-space: nowrap; transition: background .3s, border-color .3s; }
 .tool:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
-.tool[aria-pressed="true"] { background: var(--or); border-color: var(--or); color: var(--nuit); }
 .tool svg { width: 18px; height: 18px; }
-.wavebars { display: inline-flex; gap: 2px; align-items: center; height: 14px; }
-.wavebars i { width: 2px; height: 5px; background: currentColor; border-radius: 2px; }
-.tool[aria-pressed="true"] .wavebars i { animation: bars 1s ease-in-out infinite; }
-.tool[aria-pressed="true"] .wavebars i:nth-child(2) { animation-delay: .15s; }
-.tool[aria-pressed="true"] .wavebars i:nth-child(3) { animation-delay: .3s; }
-.tool[aria-pressed="true"] .wavebars i:nth-child(4) { animation-delay: .45s; }
 @keyframes bars { 50% { height: 14px; } }
 .burger { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); background: transparent; cursor: pointer; position: relative; }
 .burger span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: currentColor; transition: transform .4s var(--ease); }
@@ -155,7 +148,6 @@ p { margin: 0; }
 .menu nav { display: grid; gap: 4px; }
 .menu nav a { font-family: var(--font-display); font-size: clamp(2.6rem, 11vw, 4rem); line-height: 1.1; text-decoration: none; }
 .menu nav a em { color: var(--or); }
-.menu__tools { display: flex; flex-wrap: wrap; gap: 10px; }
 .menu__contact { display: grid; gap: 6px; font-size: 1.05rem; }
 
 /* Barre d'actions téléphone */
@@ -678,7 +670,6 @@ html.calm *, html.calm *::before, html.calm *::after { animation-duration: .001m
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hdr__tools .tool--text span:not(.wavebars) { display: none; }
   .foot__grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 900px) {

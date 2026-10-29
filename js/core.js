@@ -1,7 +1,6 @@
 // Socle commun : défilement fluide, horloge de bord et ciel, curseur, transitions,
-// révélations, langue, son et mode calme.
+// révélations, langue et mode calme (selon le réglage « réduire les animations » de l'appareil).
 import { apply, setLang, getLang, d, onLang } from './i18n.js';
-import { toggleSea, setSpeed } from './sea-sound.js';
 import { Lenis } from '../vendor/lenis/lenis.js';
 import { EVENEMENTS } from './data.js';
 import { eventStatus, isSummerEvening } from './pricing.js';
@@ -161,7 +160,7 @@ function initHeader() {
       burger.setAttribute('aria-expanded', String(open));
       hdr.classList.toggle('is-menu', open);
       if (open) hdr.classList.remove('is-hidden');
-      if (open && !calm) gsap.fromTo(menu.querySelectorAll('nav a, .menu__tools, .menu__contact'), { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06, delay: 0.18 });
+      if (open && !calm) gsap.fromTo(menu.querySelectorAll('nav a, .menu__contact'), { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.8, ease: 'expo.out', stagger: 0.06, delay: 0.18 });
       if (lenis) open ? lenis.stop() : lenis.start();
       document.body.style.overflow = open ? 'hidden' : '';
     };
@@ -278,19 +277,6 @@ function initTools() {
     updateSky();
     if (ScrollTrigger) ScrollTrigger.refresh();
   }));
-  const sounds = document.querySelectorAll('[data-sound]');
-  sounds.forEach((b) => b.addEventListener('click', () => {
-    const on = toggleSea();
-    sounds.forEach((x) => x.setAttribute('aria-pressed', String(on)));
-  }));
-  document.querySelectorAll('[data-calm]').forEach((b) => {
-    b.setAttribute('aria-pressed', String(root.classList.contains('calm')));
-    b.addEventListener('click', () => {
-      const next = !root.classList.contains('calm');
-      try { localStorage.setItem('tiki-calm', next ? '1' : '0'); } catch (e) { /* stockage indisponible */ }
-      location.reload();
-    });
-  });
   document.addEventListener('click', async (e) => {
     const b = e.target.closest('[data-copy]');
     if (!b) return;
@@ -529,7 +515,7 @@ export function initCore({ veil = true, keepIntro = false } = {}) {
   apply(getLang());
   if (!calm) {
     lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 0.95, anchors: false });
-    lenis.on('scroll', (l) => { ScrollTrigger.update(); setSpeed(l.velocity); });
+    lenis.on('scroll', () => ScrollTrigger.update());
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
   }
