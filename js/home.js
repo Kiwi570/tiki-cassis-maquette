@@ -12,15 +12,12 @@ try { seen = sessionStorage.getItem('tiki-intro') === '1'; } catch (e) { /* stoc
 
 initCore({ veil: false, keepIntro: true });
 
-/* ---------- Vidéo d'ouverture (illustration générée par IA, signalée à l'écran) ---------- */
+/* ---------- Vidéo d'ouverture (illustration générée par IA, créditée dans les mentions légales) ---------- */
 const hero = document.querySelector('.hero');
 const heroVideo = hero.querySelector('[data-hero-video]');
-const aiNote = hero.querySelector('[data-ai-note]');
-const toggle = hero.querySelector('[data-video-toggle]');
 const conn = navigator.connection || {};
 const lightData = conn.saveData || /(^|-)2g/.test(conn.effectiveType || '');
 const useVideo = !!heroVideo && !calm && !lightData && window.innerWidth / window.innerHeight >= 0.8;
-let userPaused = false;
 if (useVideo) {
   heroVideo.poster = heroVideo.dataset.poster;
   heroVideo.querySelectorAll('source').forEach((s) => { s.src = s.dataset.src; });
@@ -28,14 +25,9 @@ if (useVideo) {
   heroVideo.load();
   heroVideo.style.opacity = '1';
   hero.classList.add('has-video');
-  if (aiNote) aiNote.hidden = false;
-  const play = () => { if (!userPaused) heroVideo.play().catch(() => {}); };
+  const play = () => heroVideo.play().catch(() => {});
   play();
   new IntersectionObserver(([e]) => { if (e.isIntersecting) play(); else heroVideo.pause(); }).observe(hero);
-  const label = () => { toggle.setAttribute('aria-label', userPaused ? d('playVideo') : d('pauseVideo')); toggle.setAttribute('aria-pressed', String(userPaused)); };
-  toggle.addEventListener('click', () => { userPaused = !userPaused; if (userPaused) heroVideo.pause(); else heroVideo.play().catch(() => {}); label(); });
-  onLang(label);
-  label();
 }
 
 /* ---------- Heure réelle du coucher (ou du lever) du soleil à Cassis ---------- */
